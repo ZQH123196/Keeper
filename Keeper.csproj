@@ -1,0 +1,27 @@
+<Project Sdk="Godot.NET.Sdk/4.7.2">
+  <PropertyGroup>
+    <!-- net8.0-windows + UseWPF 是为了 UI Automation（工单 26 的图标位置那一问）。
+         它要的那一份在 Microsoft.WindowsDesktop.App 这个共用框架里 —— 系统自带，
+         不是 NuGet 包，所以「不引任何包」这条没被破。代价：产物起来要机器上装着桌面运行时。
+         取向记在 docs/adr/0003-the-window-landing-wallpaper-input.md
+         「图标位置：产品侧改问 UI Automation」那一节，读数在
+         docs/research/desktop-layer-and-window-measurements.md
+         「图标位置读法选型（产品侧）」那一节。 -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>Keeper</RootNamespace>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+  </PropertyGroup>
+
+  <!--
+    桌面量测工具那个独立模块是另一个工程（Microsoft.NET.Sdk，net8.0）。
+    这一族默认把仓库底下所有 .cs 都 glob 进来，所以这里显式把它排除掉。
+    这一行是那个工单唯一允许碰产品工程的地方。
+  -->
+  <ItemGroup>
+    <Compile Remove="src/tools/**/*.cs" />
+  </ItemGroup>
+
+</Project>

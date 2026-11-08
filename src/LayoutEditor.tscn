@@ -1,0 +1,202 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/LayoutEditor.cs" id="1"]
+[ext_resource type="Theme" path="res://src/Theme_light.tres" id="2"]
+
+; 布局编辑器（契约 .scratch/keeper-contract/spec.md「遮罩的布局是每一步自己那一份」那一节）。
+;
+; **这一扇窗和屏差不多大**：尺寸和位置由 LayoutEditor._Ready 按主屏工作区给
+; （引擎给的位置是 (0,0)，同 Presets._Ready 那一段的理由），这里写的是一个初值。
+; visible=false + _Ready 末尾 Show()：OS 窗到那一行才建（同 Options.tscn 那一条纪律，
+; 09-25 和 09-27 两版实测结果在这里互相打脸，两版合起来才全）。
+;
+; **这一扇窗里不生成整窗界面**（ADR-0001「不建 schema 链，界面在编辑器里搭成场景」）：
+; 位置全在这个文件里。代码只造三样 —— 画布、手柄那一层、摆出来的那几颗控件 ——
+; 理由写在 LayoutEditor.cs 的类型注释末尾（那一层是本机实测要自己画的，
+; 而那几颗是随数据长出来的东西，同设置窗里时间块那几行、步那几行）。
+;
+; 角色名只从 UiTheme.Roles 那一张表里取：设置窗自检第 19 条按**场景里挂出来的**角色名去问
+; 两张主题，名字拼错了那一支刷不上、节点退回基础类型那一档，而抓帧里看得出「不是我要的」
+; 看不出「名字对不上」。
+[node name="LayoutEditor" type="Window"]
+title = "Keeper"
+size = Vector2i(1200, 800)
+visible = false
+theme = ExtResource("2")
+script = ExtResource("1")
+
+[node name="Page" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+metadata/role = "Page"
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
+
+[node name="Stack" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Margin/Stack"]
+layout_mode = 2
+metadata/role = "WindowTitle"
+
+[node name="Status" type="Label" parent="Margin/Stack"]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "StatusLabel"
+
+[node name="Err" type="Label" parent="Margin/Stack"]
+visible = false
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "ErrorLabel"
+
+; 「遮罩亮着的时候这里改的，要等下一次休息才用上」——契约同一节那句话。
+; **常驻，不跟着选中的东西换**：那是这一族的一条规矩，不是一句提示。
+[node name="Note" type="Label" parent="Margin/Stack"]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Rule" type="HSeparator" parent="Margin/Stack"]
+layout_mode = 2
+
+; 工具栏。兄弟序就是显示序：先换层、再删、再那两颗整份的（回到默认 / 照抄上一步），
+; 然后摆新的，最后关掉。关掉在**最右端**（HBoxContainer 默认从左边排起），
+; 所以左边插一颗空的 Gap 带 size_flags_horizontal = 3（EXPAND）吃掉多出来的宽
+; （同 Options.tscn Nav 那一段的同一个道理）。
+;
+; 换层那两颗改的是 Z，删那颗改的是控件表，Defaults / CopyPrev 那两颗换的是整份 ——
+; 分两组摆，中间没有分隔线，因为一行七颗钮再加两条竖线是另一件要量的事。
+[node name="Bar" type="HBoxContainer" parent="Margin/Stack"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Forward" type="Button" parent="Margin/Stack/Bar"]
+layout_mode = 2
+size_flags_vertical = 4
+metadata/role = "GhostButton"
+
+[node name="Back" type="Button" parent="Margin/Stack/Bar"]
+layout_mode = 2
+size_flags_vertical = 4
+metadata/role = "GhostButton"
+
+[node name="Del" type="Button" parent="Margin/Stack/Bar"]
+layout_mode = 2
+size_flags_vertical = 4
+metadata/role = "GhostButton"
+
+[node name="Defaults" type="Button" parent="Margin/Stack/Bar"]
+layout_mode = 2
+size_flags_vertical = 4
+metadata/role = "GhostButton"
+
+[node name="CopyPrev" type="Button" parent="Margin/Stack/Bar"]
+layout_mode = 2
+size_flags_vertical = 4
+metadata/role = "GhostButton"
+
+[node name="AddText" type="Button" parent="Margin/Stack/Bar"]
+layout_mode = 2
+size_flags_vertical = 4
+metadata/role = "GhostButton"
+
+[node name="AddImage" type="Button" parent="Margin/Stack/Bar"]
+layout_mode = 2
+size_flags_vertical = 4
+metadata/role = "GhostButton"
+
+[node name="Gap" type="Control" parent="Margin/Stack/Bar"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Close" type="Button" parent="Margin/Stack/Bar"]
+layout_mode = 2
+size_flags_vertical = 4
+metadata/role = "PrimaryButton"
+
+; 选中那一颗自己的那几个字段。**没选中就只露 None 那一行**：
+; 一排灰着的输入框摆在那里，读起来像「这栏坏了」（同 Presets.tscn 里
+; 读不通的那一份照样列出来那一族：看见的和点不动的要分得开）。
+;
+; 字（文字控件那一段话 / 图控件那个路径）、摆法（只对图）、字号（那个框的一个份额）——
+; 三格都对应布局里那份数据上的三个成员，不多也不少。
+[node name="Props" type="HBoxContainer" parent="Margin/Stack"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="None" type="Label" parent="Margin/Stack/Props"]
+layout_mode = 2
+size_flags_vertical = 4
+metadata/role = "HintLabel"
+
+[node name="Words" type="VBoxContainer" parent="Margin/Stack/Props"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Name" type="Label" parent="Margin/Stack/Props/Words"]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Value" type="LineEdit" parent="Margin/Stack/Props/Words"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+
+[node name="Fit" type="VBoxContainer" parent="Margin/Stack/Props"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Name" type="Label" parent="Margin/Stack/Props/Fit"]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Value" type="OptionButton" parent="Margin/Stack/Props/Fit"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Font" type="VBoxContainer" parent="Margin/Stack/Props"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Name" type="Label" parent="Margin/Stack/Props/Font"]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Props/Font"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+min_value = 1.0
+max_value = 100.0
+step = 1.0
+suffix = "%"
+
+; 画布所在的那一块（role = Preview 是主题里给它备好的那一支浅底 + 描边）。
+; **这里只有框，没有画布**：画布和上面那层是代码造的，理由在 LayoutEditor.cs 的类型注释末尾。
+;
+; Area 是普通 Control，**不是容器** —— 容器会把子节点重排到它自己那一块，
+; 而画布要按屏的比例缩好、摆在正当中（那两件事都是算出来的，不是排出来的：
+; LayoutEditor.ScreenFit 就是那句话的算法）。
+; clip_contents 那一档是画布的边界：画布缩好之后两边的空处就是这块的边。
+[node name="CanvasHost" type="PanelContainer" parent="Margin/Stack"]
+layout_mode = 2
+size_flags_vertical = 3
+metadata/role = "Preview"
+
+[node name="Area" type="Control" parent="Margin/Stack/CanvasHost"]
+layout_mode = 2
+mouse_filter = 2

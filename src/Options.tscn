@@ -1,0 +1,2241 @@
+[gd_scene format=3 uid="uid://bwodi0n24kgw7"]
+
+[ext_resource type="Script" uid="uid://b37xtiqxmwcv2" path="res://src/Options.cs" id="1"]
+[ext_resource type="Theme" uid="uid://2afv48r527m4" path="res://src/Theme_light.tres" id="2_light"]
+
+[node name="Options" type="Window" unique_id=906926047]
+title = "Keeper"
+size = Vector2i(800, 824)
+visible = false
+theme = ExtResource("2_light")
+script = ExtResource("1")
+
+[node name="Page" type="Panel" parent="." unique_id=1021081745]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+metadata/role = "Page"
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=769369165]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
+
+[node name="Stack" type="VBoxContainer" parent="Margin" unique_id=1156655370]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="VBoxContainer" parent="Margin/Stack" unique_id=1381547834]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Title" type="Label" parent="Margin/Stack/Header" unique_id=1929311545]
+layout_mode = 2
+metadata/role = "WindowTitle"
+
+[node name="Status" type="Label" parent="Margin/Stack/Header" unique_id=1496305268]
+layout_mode = 2
+metadata/role = "StatusLabel"
+
+[node name="Error" type="Label" parent="Margin/Stack/Header" unique_id=1987969517]
+visible = false
+layout_mode = 2
+autowrap_mode = 3
+metadata/role = "ErrorLabel"
+
+[node name="Rule" type="HSeparator" parent="Margin/Stack" unique_id=772035650]
+layout_mode = 2
+
+; 窗头那一行。
+;
+; **所有者 2026-10-07 定的就是这一格**：「域标签 不许被藏」。
+;
+; 这里原来记的是「切换那里不可出现切换」—— **那是把「不许藏域标签」读成了「不许有切换」，
+; 读反了**：域标签本身就是那排切换，藏的是「不许藏它」这件事。后果是 2026-10-06 那一发
+; 把 Domains 那个 TabBar 整格删了，11 张分区卡在一条 3752 像素的滚动里从上到下排开，
+; 滚到的人以为「桌面日历」没了 —— 那是这一格被误删的真正症状，不是「选项不见了」。
+; 现在 TabBar 接回来了（2026-10-07），而且判据钉在 `Options.NavSelfTest` 那一组。
+;
+; **11 张卡全在，一格都不许收**：域切换只决定「这一格摆哪几张卡」，不决定「某一格里的行露不露」。
+; 行全在这一点上不打折 —— 「显示高级设置」那颗开关 2026-10-06 起退休，不回来。
+;
+; 兄弟序就是显示序（横向这一列从左到右）：域标签、生活模式、预设、搜索。
+; Search 排末尾是刻意的 —— 它要在这一行的最右端，也就是窗头的右上角。
+; 而「最右一格」还不等于「右上角」：HBoxContainer 默认从左边排起，末尾后面照样是一大片空白。
+; 撑开的是**域标签那一格**（size_flags_horizontal = 3，EXPAND），它吃掉所有多出来的宽，
+; 后三颗就被推到窗的右缘。
+; **为什么不撑 LifeMode**：那样会把「还没有生活模式」那颗钮本身撑成一条几百像素宽的空条，
+; 而撑宽一颗看不见的控件不花任何代价。
+[node name="Nav" type="HBoxContainer" parent="Margin/Stack" unique_id=1897174461]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Domains" type="TabBar" parent="Margin/Stack/Nav"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LifeMode" type="MenuButton" parent="Margin/Stack/Nav" unique_id=1219067915]
+layout_mode = 2
+size_flags_vertical = 4
+flat = false
+
+; 窗头这一行 2026-10-08 起只有三颗：域标签 / 生活模式 / 搜索。
+; 原来这里还有第四颗 —— 一颗只管开画廊的「预设生活模式…」常驻按钮，
+; 而「预设生活模式…」**本来就已经在生活模式那颗钮的菜单下半**（Options.RefreshLifeModeMenu
+; 那一发）。所以那一颗是同一个动作的第二个入口，两颗并排摆着。
+; 所有者定：合并成一颗 —— 留着菜单里那一条，删掉这颗常驻按钮（入口少一个，
+; 而这一个动作一个入口也不该少，它还在）。
+;
+; 判据在 Presets.EntriesSelfTest（那一组量的正是「画廊的两处入口」），
+; 那里同步记着这次合并：它原先量的是「窗头那颗 + 菜单那一项」，现在量的是
+; 「菜单里那一条 + 管理器上那颗」—— 两处入口还在（契约「画廊的入口在
+; 生活模式管理器和设置窗」），而设置窗那一处从一颗常驻钮变成菜单里那一条。
+
+[node name="Search" type="LineEdit" parent="Margin/Stack/Nav" unique_id=1858704230]
+custom_minimum_size = Vector2(196, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/Stack" unique_id=1387573624]
+custom_minimum_size = Vector2(0, 420)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Form" type="VBoxContainer" parent="Margin/Stack/Scroll" unique_id=1731369866]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Time" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=754035375]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Time" unique_id=994916794]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body" unique_id=1221422256]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="autoFade" type="GridContainer" parent="Margin/Stack/Scroll/Form/Time/Body" unique_id=349099549]
+layout_mode = 2
+columns = 3
+metadata/setting = "autoFade"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Time/Body/autoFade" unique_id=769936761]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/autoFade/Text" unique_id=1737178576]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/autoFade/Text" unique_id=555665710]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Time/Body/autoFade" unique_id=2145580601]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/autoFade" unique_id=1705892446]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="activityTimeoutMin" type="GridContainer" parent="Margin/Stack/Scroll/Form/Time/Body" unique_id=1488100570]
+layout_mode = 2
+columns = 3
+metadata/setting = "activityTimeoutMin"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Time/Body/activityTimeoutMin" unique_id=2138014632]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/activityTimeoutMin/Text" unique_id=1592230529]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/activityTimeoutMin/Text" unique_id=1070134173]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Time/Body/activityTimeoutMin" unique_id=284059448]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/activityTimeoutMin" unique_id=2022887709]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="minBreakMs" type="GridContainer" parent="Margin/Stack/Scroll/Form/Time/Body" unique_id=1997296999]
+layout_mode = 2
+columns = 3
+metadata/setting = "minBreakMs"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Time/Body/minBreakMs" unique_id=2124337349]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/minBreakMs/Text" unique_id=2001566514]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/minBreakMs/Text" unique_id=455361078]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Time/Body/minBreakMs" unique_id=1334601441]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/minBreakMs" unique_id=1714357518]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="restDelay" type="GridContainer" parent="Margin/Stack/Scroll/Form/Time/Body"]
+layout_mode = 2
+columns = 3
+metadata/setting = "restDelay"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Time/Body/restDelay"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/restDelay/Text"]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/restDelay/Text"]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="LineEdit" parent="Margin/Stack/Scroll/Form/Time/Body/restDelay"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/restDelay"]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="triggerPauseMs" type="GridContainer" parent="Margin/Stack/Scroll/Form/Time/Body" unique_id=2122805157]
+layout_mode = 2
+columns = 3
+metadata/setting = "triggerPauseMs"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Time/Body/triggerPauseMs" unique_id=1735188713]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/triggerPauseMs/Text" unique_id=1220233090]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/triggerPauseMs/Text" unique_id=42825527]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Time/Body/triggerPauseMs" unique_id=966855293]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/triggerPauseMs" unique_id=182401582]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="dismissHoldMs" type="GridContainer" parent="Margin/Stack/Scroll/Form/Time/Body" unique_id=675241218]
+layout_mode = 2
+columns = 3
+metadata/setting = "dismissHoldMs"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Time/Body/dismissHoldMs" unique_id=1053995728]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/dismissHoldMs/Text" unique_id=2116668003]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/dismissHoldMs/Text" unique_id=1029607190]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Time/Body/dismissHoldMs" unique_id=1608976903]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Time/Body/dismissHoldMs" unique_id=1996805986]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="List" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=1658881036]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/List" unique_id=1239877574]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/List/Body" unique_id=615630590]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/List/Body" unique_id=297034895]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Rows" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/List/Body" unique_id=1300899495]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Template" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/List/Body/Rows" unique_id=2013220288]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Done" type="CheckBox" parent="Margin/Stack/Scroll/Form/List/Body/Rows/Template" unique_id=47335957]
+layout_mode = 2
+
+[node name="Text" type="LineEdit" parent="Margin/Stack/Scroll/Form/List/Body/Rows/Template" unique_id=603418781]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Del" type="Button" parent="Margin/Stack/Scroll/Form/List/Body/Rows/Template" unique_id=1090134774]
+layout_mode = 2
+
+[node name="Add" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/List/Body" unique_id=1932654407]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Text" type="LineEdit" parent="Margin/Stack/Scroll/Form/List/Body/Add" unique_id=63023618]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Btn" type="Button" parent="Margin/Stack/Scroll/Form/List/Body/Add" unique_id=520025240]
+layout_mode = 2
+
+[node name="Pomodoro" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=394498675]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Pomodoro" unique_id=2051536484]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/Pomodoro/Body" unique_id=235229648]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="pomodoro.workMin" type="GridContainer" parent="Margin/Stack/Scroll/Form/Pomodoro/Body" unique_id=701884972]
+layout_mode = 2
+columns = 3
+metadata/setting = "pomodoro.workMin"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Pomodoro/Body/pomodoro.workMin" unique_id=969067517]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Pomodoro/Body/pomodoro.workMin/Text" unique_id=1160585038]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Pomodoro/Body/pomodoro.workMin/Text" unique_id=1694149219]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Pomodoro/Body/pomodoro.workMin" unique_id=1458113970]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Pomodoro/Body/pomodoro.workMin" unique_id=229982347]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="Image" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=221227153]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Image" unique_id=2116234220]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/Image/Body" unique_id=85659578]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="image_enabled" type="GridContainer" parent="Margin/Stack/Scroll/Form/Image/Body" unique_id=822792157]
+layout_mode = 2
+columns = 3
+metadata/setting = "image.enabled"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Image/Body/image_enabled" unique_id=2141955444]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Image/Body/image_enabled/Text" unique_id=484873209]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Image/Body/image_enabled/Text" unique_id=386256699]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Image/Body/image_enabled" unique_id=641624248]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Image/Body/image_enabled" unique_id=1859451866]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="image_file" type="GridContainer" parent="Margin/Stack/Scroll/Form/Image/Body" unique_id=1665312437]
+layout_mode = 2
+columns = 3
+metadata/setting = "image.file"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Image/Body/image_file" unique_id=1979690122]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Image/Body/image_file/Text" unique_id=1165157043]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Image/Body/image_file/Text" unique_id=396567381]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="LineEdit" parent="Margin/Stack/Scroll/Form/Image/Body/image_file" unique_id=1929567968]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Image/Body/image_file" unique_id=1366375858]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="Browse" type="Button" parent="Margin/Stack/Scroll/Form/Image/Body/image_file" unique_id=1141152136]
+layout_mode = 2
+
+[node name="image_position" type="GridContainer" parent="Margin/Stack/Scroll/Form/Image/Body" unique_id=1667453764]
+layout_mode = 2
+columns = 3
+metadata/setting = "image.position"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Image/Body/image_position" unique_id=1479058356]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Image/Body/image_position/Text" unique_id=116557977]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Image/Body/image_position/Text" unique_id=675175201]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="OptionButton" parent="Margin/Stack/Scroll/Form/Image/Body/image_position" unique_id=181047159]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Image/Body/image_position" unique_id=1988874162]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="Sound" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=411097670]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Sound" unique_id=1624444801]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body" unique_id=1325681349]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="sound_enabled" type="GridContainer" parent="Margin/Stack/Scroll/Form/Sound/Body" unique_id=1327944507]
+layout_mode = 2
+columns = 3
+metadata/setting = "sound.enabled"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_enabled" unique_id=1265051467]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_enabled/Text" unique_id=616524899]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_enabled/Text" unique_id=69326008]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_enabled" unique_id=680746788]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_enabled" unique_id=1699429246]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="sound_file" type="GridContainer" parent="Margin/Stack/Scroll/Form/Sound/Body" unique_id=1756959770]
+layout_mode = 2
+columns = 3
+metadata/setting = "sound.file"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_file" unique_id=1853499269]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_file/Text" unique_id=1598414717]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_file/Text" unique_id=1872513741]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="LineEdit" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_file" unique_id=534826626]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_file" unique_id=1174150700]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="Browse" type="Button" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_file" unique_id=1858911570]
+layout_mode = 2
+
+[node name="sound_volume" type="GridContainer" parent="Margin/Stack/Scroll/Form/Sound/Body" unique_id=1914658967]
+layout_mode = 2
+columns = 3
+metadata/setting = "sound.volume"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_volume" unique_id=460758568]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_volume/Text" unique_id=184068084]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_volume/Text" unique_id=1576207587]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_volume" unique_id=1246710663]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_volume" unique_id=1889438870]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="sound_fadeIn" type="GridContainer" parent="Margin/Stack/Scroll/Form/Sound/Body" unique_id=140328498]
+layout_mode = 2
+columns = 3
+metadata/setting = "sound.fadeIn"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_fadeIn" unique_id=1435350513]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_fadeIn/Text" unique_id=1401615595]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_fadeIn/Text" unique_id=860346285]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_fadeIn" unique_id=1137999721]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_fadeIn" unique_id=1885715347]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="sound_fadeOut" type="GridContainer" parent="Margin/Stack/Scroll/Form/Sound/Body" unique_id=2044223443]
+layout_mode = 2
+columns = 3
+metadata/setting = "sound.fadeOut"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_fadeOut" unique_id=580986142]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_fadeOut/Text" unique_id=1625055544]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_fadeOut/Text" unique_id=536476800]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_fadeOut" unique_id=1526426445]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_fadeOut" unique_id=260342380]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="sound_repeat" type="GridContainer" parent="Margin/Stack/Scroll/Form/Sound/Body" unique_id=771839638]
+layout_mode = 2
+columns = 3
+metadata/setting = "sound.repeat"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_repeat" unique_id=2126454056]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_repeat/Text" unique_id=852814200]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_repeat/Text" unique_id=139761719]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_repeat" unique_id=475319128]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_repeat" unique_id=162207425]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="sound_afterLanding" type="GridContainer" parent="Margin/Stack/Scroll/Form/Sound/Body" unique_id=643186243]
+layout_mode = 2
+columns = 3
+metadata/setting = "sound.afterLanding"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_afterLanding" unique_id=647628095]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_afterLanding/Text" unique_id=2097639851]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_afterLanding/Text" unique_id=555070832]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_afterLanding" unique_id=1020732735]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Sound/Body/sound_afterLanding" unique_id=1416545994]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="Dnd" type="PanelContainer" parent="Margin/Stack/Scroll/Form"]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body"]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="dnd.enabled" type="GridContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body"]
+layout_mode = 2
+columns = 3
+metadata/setting = "dnd.enabled"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body/dnd.enabled"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/dnd.enabled/Text"]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/dnd.enabled/Text"]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Dnd/Body/dnd.enabled"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/dnd.enabled"]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="WindowsHint" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body"]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Windows" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Template" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Head" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Which" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Head"]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="Stretch" type="Control" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Head"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Up" type="Button" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Head"]
+layout_mode = 2
+
+[node name="Down" type="Button" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Head"]
+layout_mode = 2
+
+[node name="Del" type="Button" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Head"]
+layout_mode = 2
+
+[node name="Fields" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="StartMinute" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/StartMinute"]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Hour" type="SpinBox" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/StartMinute"]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="HourUnit" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/StartMinute"]
+layout_mode = 2
+vertical_alignment = 1
+metadata/role = "UnitLabel"
+
+[node name="Minute" type="SpinBox" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/StartMinute"]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="MinuteUnit" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/StartMinute"]
+layout_mode = 2
+vertical_alignment = 1
+metadata/role = "UnitLabel"
+
+[node name="EndMinute" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/EndMinute"]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Hour" type="SpinBox" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/EndMinute"]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="HourUnit" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/EndMinute"]
+layout_mode = 2
+vertical_alignment = 1
+metadata/role = "UnitLabel"
+
+[node name="Minute" type="SpinBox" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/EndMinute"]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="MinuteUnit" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/EndMinute"]
+layout_mode = 2
+vertical_alignment = 1
+metadata/role = "UnitLabel"
+
+[node name="Weekdays" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/Weekdays"]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Edit" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/Weekdays"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Template" type="CheckBox" parent="Margin/Stack/Scroll/Form/Dnd/Body/Windows/Template/Fields/Weekdays/Edit"]
+visible = false
+layout_mode = 2
+
+[node name="AddWindow" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Btn" type="Button" parent="Margin/Stack/Scroll/Form/Dnd/Body/AddWindow"]
+layout_mode = 2
+
+[node name="Total" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/AddWindow"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="AppsHint" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body"]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Foreground" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body"]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Rows" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Template" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body/Rows"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Edit" type="LineEdit" parent="Margin/Stack/Scroll/Form/Dnd/Body/Rows/Template"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="Del" type="Button" parent="Margin/Stack/Scroll/Form/Dnd/Body/Rows/Template"]
+layout_mode = 2
+
+[node name="AddApp" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Dnd/Body"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Text" type="LineEdit" parent="Margin/Stack/Scroll/Form/Dnd/Body/AddApp"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Btn" type="Button" parent="Margin/Stack/Scroll/Form/Dnd/Body/AddApp"]
+layout_mode = 2
+
+[node name="Total" type="Label" parent="Margin/Stack/Scroll/Form/Dnd/Body/AddApp"]
+layout_mode = 2
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Flows" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=1061494336]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Flows" unique_id=667247591]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/Flows/Body" unique_id=678015756]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="flow" type="GridContainer" parent="Margin/Stack/Scroll/Form/Flows/Body" unique_id=378485407]
+layout_mode = 2
+columns = 3
+metadata/setting = "flow"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Flows/Body/flow" unique_id=1661561543]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Flows/Body/flow/Text" unique_id=307708870]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Flows/Body/flow/Text" unique_id=1924277604]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="OptionButton" parent="Margin/Stack/Scroll/Form/Flows/Body/flow" unique_id=1736334472]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Flows/Body/flow" unique_id=1968662482]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Flows/Body" unique_id=923159584]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Pick" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Flows/Body" unique_id=871856715]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Which" type="OptionButton" parent="Margin/Stack/Scroll/Form/Flows/Body/Pick" unique_id=1628988180]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+
+[node name="Name" type="LineEdit" parent="Margin/Stack/Scroll/Form/Flows/Body/Pick" unique_id=1116332174]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 40
+
+[node name="NewBtn" type="Button" parent="Margin/Stack/Scroll/Form/Flows/Body/Pick" unique_id=448064755]
+layout_mode = 2
+
+[node name="DelBtn" type="Button" parent="Margin/Stack/Scroll/Form/Flows/Body/Pick" unique_id=357413624]
+layout_mode = 2
+
+[node name="Steps" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Flows/Body" unique_id=538054027]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Template" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps" unique_id=1609669135]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Head" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template" unique_id=984819490]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Which" type="Label" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Head" unique_id=1488168016]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="Ms" type="SpinBox" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Head" unique_id=294047387]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Head" unique_id=1950450838]
+layout_mode = 2
+metadata/role = "UnitLabel"
+
+[node name="Stretch" type="Control" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Head" unique_id=987227213]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Up" type="Button" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Head" unique_id=1752903314]
+layout_mode = 2
+
+[node name="Down" type="Button" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Head" unique_id=1116388068]
+layout_mode = 2
+
+[node name="Del" type="Button" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Head" unique_id=365046826]
+layout_mode = 2
+
+[node name="Flags" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template" unique_id=2076519962]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Dismissible" type="CheckBox" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Flags" unique_id=780612311]
+layout_mode = 2
+
+[node name="Interactive" type="CheckBox" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Flags" unique_id=939297053]
+layout_mode = 2
+
+[node name="Sound" type="CheckBox" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Flags" unique_id=209130082]
+layout_mode = 2
+
+[node name="Show" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template" unique_id=830653096]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Show" unique_id=1393162613]
+layout_mode = 2
+
+[node name="Lay" type="Button" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Show" unique_id=1917364402]
+layout_mode = 2
+
+[node name="Choices" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Show" unique_id=1137529351]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Template" type="CheckBox" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Show/Choices" unique_id=368886638]
+visible = false
+layout_mode = 2
+
+[node name="Words" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template" unique_id=1210550318]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Words" unique_id=1210550319]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="Edit" type="LineEdit" parent="Margin/Stack/Scroll/Form/Flows/Body/Steps/Template/Words" unique_id=1210550320]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AddStep" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Flows/Body" unique_id=1587657546]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Btn" type="Button" parent="Margin/Stack/Scroll/Form/Flows/Body/AddStep" unique_id=301864771]
+layout_mode = 2
+
+[node name="Total" type="Label" parent="Margin/Stack/Scroll/Form/Flows/Body/AddStep" unique_id=1206603760]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 2
+
+[node name="Fader" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=462288159]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader" unique_id=292553766]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=587445754]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="Preview" type="PanelContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=687029831]
+custom_minimum_size = Vector2(0, 104)
+layout_mode = 2
+mouse_filter = 1
+
+[node name="Backdrop" type="TextureRect" parent="Margin/Stack/Scroll/Form/Fader/Body/Preview" unique_id=1652470863]
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Sample" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/Preview" unique_id=898208499]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="maxOpacityPercent" type="GridContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=999361235]
+layout_mode = 2
+columns = 3
+metadata/setting = "maxOpacityPercent"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader/Body/maxOpacityPercent" unique_id=474979383]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/maxOpacityPercent/Text" unique_id=1889826623]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/maxOpacityPercent/Text" unique_id=1929034765]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Fader/Body/maxOpacityPercent" unique_id=1391267703]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/maxOpacityPercent" unique_id=665515959]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="fadeInMs" type="GridContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=1322545230]
+layout_mode = 2
+columns = 3
+metadata/setting = "fadeInMs"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader/Body/fadeInMs" unique_id=352878641]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/fadeInMs/Text" unique_id=1502527842]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/fadeInMs/Text" unique_id=2085076734]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Fader/Body/fadeInMs" unique_id=371295296]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/fadeInMs" unique_id=330722318]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="fadeOutMs" type="GridContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=933311650]
+layout_mode = 2
+columns = 3
+metadata/setting = "fadeOutMs"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader/Body/fadeOutMs" unique_id=1199903406]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/fadeOutMs/Text" unique_id=1964818885]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/fadeOutMs/Text" unique_id=685708159]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Fader/Body/fadeOutMs" unique_id=1573559805]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/fadeOutMs" unique_id=1923574051]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="stayOnTopAfterLanding" type="GridContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=1467829541]
+layout_mode = 2
+columns = 3
+metadata/setting = "stayOnTopAfterLanding"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader/Body/stayOnTopAfterLanding" unique_id=618219805]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/stayOnTopAfterLanding/Text" unique_id=118499367]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/stayOnTopAfterLanding/Text" unique_id=2046806471]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Fader/Body/stayOnTopAfterLanding" unique_id=543407451]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/stayOnTopAfterLanding" unique_id=986152704]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="textScalePercent" type="GridContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=983965103]
+layout_mode = 2
+columns = 3
+metadata/setting = "textScalePercent"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader/Body/textScalePercent" unique_id=1753449118]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/textScalePercent/Text" unique_id=1349819307]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/textScalePercent/Text" unique_id=1723952900]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Fader/Body/textScalePercent" unique_id=584139135]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/textScalePercent" unique_id=1514371516]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="foregroundColor" type="GridContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=2055245476]
+layout_mode = 2
+columns = 3
+metadata/setting = "foregroundColor"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader/Body/foregroundColor" unique_id=1551320836]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/foregroundColor/Text" unique_id=208887825]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/foregroundColor/Text" unique_id=846369936]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="ColorPickerButton" parent="Margin/Stack/Scroll/Form/Fader/Body/foregroundColor" unique_id=954108094]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+edit_alpha = false
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/foregroundColor" unique_id=417398464]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="backgroundColor" type="GridContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=1333528685]
+layout_mode = 2
+columns = 3
+metadata/setting = "backgroundColor"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader/Body/backgroundColor" unique_id=1733136170]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/backgroundColor/Text" unique_id=161185950]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/backgroundColor/Text" unique_id=543795699]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="ColorPickerButton" parent="Margin/Stack/Scroll/Form/Fader/Body/backgroundColor" unique_id=540088272]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+edit_alpha = false
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/backgroundColor" unique_id=689588956]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="clock24Hour" type="GridContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=1668546252]
+layout_mode = 2
+columns = 3
+metadata/setting = "clock24Hour"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader/Body/clock24Hour" unique_id=2106146334]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/clock24Hour/Text" unique_id=1299616187]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/clock24Hour/Text" unique_id=1476725906]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Fader/Body/clock24Hour" unique_id=382798527]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/clock24Hour" unique_id=1426040122]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="allMonitors" type="GridContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=404930727]
+layout_mode = 2
+columns = 3
+metadata/setting = "allMonitors"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader/Body/allMonitors" unique_id=122775983]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/allMonitors/Text" unique_id=1020741829]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/allMonitors/Text" unique_id=1390665961]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Fader/Body/allMonitors" unique_id=749709594]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/allMonitors" unique_id=1009936524]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="blockWhenFullscreen" type="GridContainer" parent="Margin/Stack/Scroll/Form/Fader/Body" unique_id=1417662123]
+layout_mode = 2
+columns = 3
+metadata/setting = "blockWhenFullscreen"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Fader/Body/blockWhenFullscreen" unique_id=694804753]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/blockWhenFullscreen/Text" unique_id=12349758]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/blockWhenFullscreen/Text" unique_id=1758299531]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Fader/Body/blockWhenFullscreen" unique_id=58450740]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Fader/Body/blockWhenFullscreen" unique_id=273014521]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="Calendar" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=1715183440]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar" unique_id=1611618508]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=1577379977]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="calendar_enabled" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=1340614319]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.enabled"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_enabled" unique_id=1530179992]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_enabled/Text" unique_id=1898243910]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_enabled/Text" unique_id=1582560247]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_enabled" unique_id=1205693086]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_enabled" unique_id=1803331667]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="calendar_style" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=1970008586]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.style"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_style" unique_id=1485174338]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_style/Text" unique_id=1332529472]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_style/Text" unique_id=1153489004]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="OptionButton" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_style" unique_id=1462121525]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_style" unique_id=2016382246]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="calendar_corner" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=1827998626]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.corner"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_corner" unique_id=1770643053]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_corner/Text" unique_id=1601618666]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_corner/Text" unique_id=1668174858]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="OptionButton" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_corner" unique_id=413603915]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_corner" unique_id=374381862]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="calendar_widthPercent" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=1887642629]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.widthPercent"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_widthPercent" unique_id=640582196]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_widthPercent/Text" unique_id=1798458084]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_widthPercent/Text" unique_id=835635434]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_widthPercent" unique_id=1029237156]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_widthPercent" unique_id=427905377]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="calendar_heightPercent" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=268274363]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.heightPercent"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_heightPercent" unique_id=187431082]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_heightPercent/Text" unique_id=1470159716]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_heightPercent/Text" unique_id=556938304]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_heightPercent" unique_id=1827584185]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_heightPercent" unique_id=400646432]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="calendar_widgetWidthPercent" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=186420583]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.widgetWidthPercent"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_widgetWidthPercent" unique_id=545662500]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_widgetWidthPercent/Text" unique_id=344654771]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_widgetWidthPercent/Text" unique_id=1185483758]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_widgetWidthPercent" unique_id=1432605611]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_widgetWidthPercent" unique_id=1733600315]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="calendar_headerPercent" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=123663359]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.headerPercent"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_headerPercent" unique_id=12942327]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_headerPercent/Text" unique_id=598758133]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_headerPercent/Text" unique_id=1614090365]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_headerPercent" unique_id=1817237380]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_headerPercent" unique_id=444142885]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="calendar_marginXPercent" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=2041511935]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.marginXPercent"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_marginXPercent" unique_id=398379529]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_marginXPercent/Text" unique_id=1291322586]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_marginXPercent/Text" unique_id=1890914978]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_marginXPercent" unique_id=1416015537]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_marginXPercent" unique_id=570456386]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="calendar_marginYPercent" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=567849330]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.marginYPercent"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_marginYPercent" unique_id=1384587182]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_marginYPercent/Text" unique_id=957878520]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_marginYPercent/Text" unique_id=1871304406]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_marginYPercent" unique_id=1097487429]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_marginYPercent" unique_id=2088884833]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="calendar_textPercent" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=1827998659]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.textPercent"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_textPercent" unique_id=325884932]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_textPercent/Text" unique_id=2057231870]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_textPercent/Text" unique_id=1655349452]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_textPercent" unique_id=1458219379]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_textPercent" unique_id=1753072039]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="calendar_opacityPercent" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=82929368]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.opacityPercent"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_opacityPercent" unique_id=561109268]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_opacityPercent/Text" unique_id=1960657221]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_opacityPercent/Text" unique_id=1139096370]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="SpinBox" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_opacityPercent" unique_id=1842203728]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_opacityPercent" unique_id=1974227723]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_alignment = 2
+metadata/role = "UnitLabel"
+
+[node name="calendar_weekStartsMonday" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=161812010]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.weekStartsMonday"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_weekStartsMonday" unique_id=1917805065]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_weekStartsMonday/Text" unique_id=1143736632]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_weekStartsMonday/Text" unique_id=2027280521]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_weekStartsMonday" unique_id=1717837732]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_weekStartsMonday" unique_id=609889064]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="calendar_showLunar" type="GridContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body" unique_id=1294802046]
+layout_mode = 2
+columns = 3
+metadata/setting = "calendar.showLunar"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_showLunar" unique_id=578502685]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_showLunar/Text" unique_id=221886820]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_showLunar/Text" unique_id=1609706716]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_showLunar" unique_id=1642834701]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Calendar/Body/calendar_showLunar" unique_id=1989733342]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="Routine" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=1421637092]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Routine" unique_id=83713635]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body" unique_id=640020515]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="routine.enabled" type="GridContainer" parent="Margin/Stack/Scroll/Form/Routine/Body" unique_id=853543543]
+layout_mode = 2
+columns = 3
+metadata/setting = "routine.enabled"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/routine.enabled" unique_id=826233887]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/routine.enabled/Text" unique_id=139919569]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/routine.enabled/Text" unique_id=143844288]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/Routine/Body/routine.enabled" unique_id=840351]
+layout_mode = 2
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/routine.enabled" unique_id=2071026824]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body" unique_id=1557766031]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Blocks" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body" unique_id=1098458450]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Template" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks" unique_id=1317328388]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Head" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template" unique_id=582603716]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Which" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Head" unique_id=955099265]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="Stretch" type="Control" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Head" unique_id=2034675473]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Up" type="Button" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Head" unique_id=796003749]
+layout_mode = 2
+
+[node name="Down" type="Button" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Head" unique_id=836981976]
+layout_mode = 2
+
+[node name="Del" type="Button" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Head" unique_id=1266046347]
+layout_mode = 2
+
+[node name="Fields" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template" unique_id=2067495599]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="StartMinute" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields" unique_id=1444394830]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/StartMinute" unique_id=491782847]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Hour" type="SpinBox" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/StartMinute" unique_id=917059818]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="HourUnit" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/StartMinute" unique_id=1590540683]
+layout_mode = 2
+vertical_alignment = 1
+metadata/role = "UnitLabel"
+
+[node name="Minute" type="SpinBox" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/StartMinute" unique_id=90147834]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="MinuteUnit" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/StartMinute" unique_id=2092688109]
+layout_mode = 2
+vertical_alignment = 1
+metadata/role = "UnitLabel"
+
+[node name="EndMinute" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields" unique_id=1635211733]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/EndMinute" unique_id=1650524433]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Hour" type="SpinBox" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/EndMinute" unique_id=1101337172]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="HourUnit" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/EndMinute" unique_id=1984138628]
+layout_mode = 2
+vertical_alignment = 1
+metadata/role = "UnitLabel"
+
+[node name="Minute" type="SpinBox" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/EndMinute" unique_id=252411086]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+
+[node name="MinuteUnit" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/EndMinute" unique_id=553856872]
+layout_mode = 2
+vertical_alignment = 1
+metadata/role = "UnitLabel"
+
+[node name="Name" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields" unique_id=1473359777]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/Name" unique_id=764880782]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Edit" type="LineEdit" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/Name" unique_id=882986357]
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 40
+
+[node name="Kind" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields" unique_id=967736057]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/Kind" unique_id=617049182]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Edit" type="LineEdit" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/Kind" unique_id=150576667]
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 40
+
+[node name="Flow" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields" unique_id=1558288257]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/Flow" unique_id=596700708]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Edit" type="OptionButton" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/Flow" unique_id=2020031869]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Fade" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields" unique_id=1357293020]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/Fade" unique_id=1479661396]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Edit" type="CheckBox" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/Fade" unique_id=1805439778]
+layout_mode = 2
+
+[node name="YieldsToInput" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields" unique_id=2090625602]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Tag" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/YieldsToInput" unique_id=929749622]
+custom_minimum_size = Vector2(104, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="Edit" type="CheckBox" parent="Margin/Stack/Scroll/Form/Routine/Body/Blocks/Template/Fields/YieldsToInput" unique_id=1193818367]
+layout_mode = 2
+
+[node name="AddBlock" type="HBoxContainer" parent="Margin/Stack/Scroll/Form/Routine/Body" unique_id=334152268]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Btn" type="Button" parent="Margin/Stack/Scroll/Form/Routine/Body/AddBlock" unique_id=1070724084]
+layout_mode = 2
+
+[node name="Total" type="Label" parent="Margin/Stack/Scroll/Form/Routine/Body/AddBlock" unique_id=1579687637]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="System" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=1879625688]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/System" unique_id=182963978]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/System/Body" unique_id=93431260]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="autostart" type="GridContainer" parent="Margin/Stack/Scroll/Form/System/Body" unique_id=461781795]
+layout_mode = 2
+columns = 3
+metadata/setting = "autostart"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/System/Body/autostart" unique_id=1896482778]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/System/Body/autostart/Text" unique_id=2064441251]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/System/Body/autostart/Text" unique_id=20352144]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="CheckButton" parent="Margin/Stack/Scroll/Form/System/Body/autostart" unique_id=798234035]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/System/Body/autostart" unique_id=783799112]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="language" type="GridContainer" parent="Margin/Stack/Scroll/Form/System/Body" unique_id=286550946]
+layout_mode = 2
+columns = 3
+metadata/setting = "language"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/System/Body/language" unique_id=977057933]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/System/Body/language/Text" unique_id=1685149643]
+layout_mode = 2
+metadata/role = "RowName"
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/System/Body/language/Text" unique_id=1260901748]
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "HintLabel"
+
+[node name="Value" type="OptionButton" parent="Margin/Stack/Scroll/Form/System/Body/language" unique_id=807429764]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/System/Body/language" unique_id=73065655]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+[node name="uiTheme" type="GridContainer" parent="Margin/Stack/Scroll/Form/System/Body" unique_id=658815852]
+layout_mode = 2
+columns = 3
+metadata/setting = "uiTheme"
+
+[node name="Text" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/System/Body/uiTheme" unique_id=626933014]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Margin/Stack/Scroll/Form/System/Body/uiTheme/Text" unique_id=2081381898]
+layout_mode = 2
+
+[node name="Hint" type="Label" parent="Margin/Stack/Scroll/Form/System/Body/uiTheme/Text" unique_id=650594275]
+layout_mode = 2
+autowrap_mode = 2
+
+[node name="Value" type="OptionButton" parent="Margin/Stack/Scroll/Form/System/Body/uiTheme" unique_id=2124180713]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Unit" type="Label" parent="Margin/Stack/Scroll/Form/System/Body/uiTheme" unique_id=1609369206]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "UnitLabel"
+
+; 「历史」这一格（2026-10-08）。它装的是**读数不是设置**，所以这一张卡片里
+; 一行 metadata/setting 都没有，只有一颗开窗的钮 —— 声明表一个格子都不占
+; （契约「历史不进生活模式」那一条）。正因为没有设置行，它在
+; Options.KeepsOwnContent 里：搜别的词时这张卡片要留在场上，不能被筛成一张空壳。
+;
+; 那一颗钮开的是托盘那一条开的**同一扇窗**（契约「两个入口，同一份数据」）。
+
+[node name="History" type="PanelContainer" parent="Margin/Stack/Scroll/Form" unique_id=1170000001]
+layout_mode = 2
+metadata/role = "Card"
+
+[node name="Body" type="VBoxContainer" parent="Margin/Stack/Scroll/Form/History" unique_id=1170000002]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Margin/Stack/Scroll/Form/History/Body" unique_id=1170000003]
+layout_mode = 2
+metadata/role = "SectionTitle"
+
+[node name="Open" type="Button" parent="Margin/Stack/Scroll/Form/History/Body" unique_id=1170000004]
+layout_mode = 2
+size_flags_horizontal = 0
+metadata/role = "GhostButton"
+
+[node name="Rule2" type="HSeparator" parent="Margin/Stack" unique_id=957704652]
+layout_mode = 2
+
+[node name="Msg" type="RichTextLabel" parent="Margin/Stack" unique_id=1317391811]
+visible = false
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+bbcode_enabled = true
+
+[node name="Footer" type="HBoxContainer" parent="Margin/Stack" unique_id=1878413690]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Preview" type="Button" parent="Margin/Stack/Footer" unique_id=1972588364]
+layout_mode = 2
+metadata/role = "GhostButton"
+
+[node name="Export" type="Button" parent="Margin/Stack/Footer" unique_id=1631913375]
+layout_mode = 2
+metadata/role = "GhostButton"
+
+[node name="Import" type="Button" parent="Margin/Stack/Footer" unique_id=427649662]
+layout_mode = 2
+metadata/role = "GhostButton"
+
+[node name="Defaults" type="Button" parent="Margin/Stack/Footer" unique_id=1909254456]
+layout_mode = 2
+metadata/role = "GhostButton"
+
+[node name="Gap" type="Control" parent="Margin/Stack/Footer" unique_id=810943717]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Save" type="Button" parent="Margin/Stack/Footer" unique_id=1552453726]
+layout_mode = 2
+metadata/role = "PrimaryButton"
+
+[node name="Pick" type="FileDialog" parent="." unique_id=1589053570]
+size = Vector2i(560, 380)
+access = 2
+
+[node name="Name" type="Window" parent="." unique_id=2100221059]
+title = "给这个生活模式起个名"
+size = Vector2i(460, 150)
+visible = false
+transient = true
+unresizable = true
+
+[node name="Page" type="Panel" parent="Name" unique_id=185991401]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+metadata/role = "Page"
+
+[node name="Margin" type="MarginContainer" parent="Name" unique_id=545859104]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
+
+[node name="Stack" type="VBoxContainer" parent="Name/Margin" unique_id=371975079]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Err" type="Label" parent="Name/Margin/Stack" unique_id=1437135601]
+visible = false
+layout_mode = 2
+autowrap_mode = 2
+metadata/role = "ErrorLabel"
+
+[node name="Text" type="LineEdit" parent="Name/Margin/Stack" unique_id=1273890081]
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Name/Margin/Stack" unique_id=801829224]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Gap" type="Control" parent="Name/Margin/Stack/Buttons" unique_id=333422889]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Ok" type="Button" parent="Name/Margin/Stack/Buttons" unique_id=1140193622]
+layout_mode = 2
+metadata/role = "PrimaryButton"
+
+[node name="Cancel" type="Button" parent="Name/Margin/Stack/Buttons" unique_id=1917899265]
+layout_mode = 2
+metadata/role = "GhostButton"

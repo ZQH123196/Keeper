@@ -1,0 +1,126 @@
+// 出处：全国爱卫办（国家卫生健康委）《睡眠健康核心信息及释义》，2025-03 发布，倒推出的一张作息表。
+// 逐条引文、发布日期、抓取记录（含 nhc.gov.cn 返回 412 之后走的镜像）见
+// docs/research/healthy-sleep-guidance.md —— 那里面每个数都指得回条文原话。
+// Provenance: worked backwards from the NHC's published "Core Information and Interpretation on
+// Healthy Sleep" (March 2025). Quotations, dates and fetch log in docs/research/healthy-sleep-guidance.md.
+{
+  "schemaVersion": 1,
+
+  "activityTimeoutMin": 15,
+  "flow": "fadetop",
+  "fadeInMs": 3000,
+  "fadeOutMs": 1000,
+  "maxOpacityPercent": 70,
+
+  // 遮罩上摆的是「状态实测结果 + 这一步自带的字 + 当前时间块的名字」。
+  // **块名只有作息表那一份真相**：`block` 由作息表替它算，下面的 `text` 不重写块名。
+  "flows": {
+    "醒着": {
+      "steps": [
+        {
+          "ms": 0,
+          "dismissible": true,
+          "interactive": false,
+          "content": ["clock", "block", "text"],
+          // 条文第四条开头一句，原话照抄：
+          // 「规律作息、劳逸结合、适量运动以及安静舒适的睡眠环境有助于保持良好睡眠，
+          //   避免熬夜、睡前饮酒喝茶，晚餐不宜过饱过晚，睡前尽量不要刷手机。」
+          "text": "规律作息，劳逸结合。",
+          "sound": true
+        }
+      ]
+    },
+    "临睡": {
+      "steps": [
+        {
+          "ms": 0,
+          "dismissible": true,
+          "interactive": false,
+          "content": ["clock", "block", "text"],
+          // 条文第四条：室内「温度在 20℃～24℃、空气湿度在 40%～60% 为宜，经常开窗通风」。
+          "text": "二十到二十四度，湿度四到六成。",
+          "sound": true
+        }
+      ]
+    }
+  },
+
+  "routine": {
+    "enabled": true,
+    "blocks": [
+      {
+        // 来源：全国爱卫办《睡眠健康核心信息及释义》第二条。**倒推的每一步**（条文原话）：
+        //   ①「成年人推荐晚上 10～11 时入睡，早晨 6～7 时起床」—— 两个窗口四种组合，
+        //      时长分别 7 / 8 / 8 / 9 小时；
+        //   ② 同一条要求成年人「7～8 小时」，**9 小时那一种超出这份文件自己给的上界，排除**；
+        //   ③ 取剩下的 23:00 → 07:00（8 小时，落在上界）；
+        //   ④ 再扣同一条的「入睡时间在 30 分钟以内」：躺下 23:00、睡着 23:30、07:00 起，
+        //      **实际睡 7.5 小时，仍在 7～8 之内**。
+        "startMinute": 1380,
+        "endMinute": 420,
+        "name": "夜",
+        // 种类里只有这一个取值带行为语义；文档里写的是英文那个取值，不是中文那两个字。
+        "kind": "sleep",
+        "fade": false,
+        "flow": "",
+        "yieldsToInput": true
+      },
+      {
+        // 07:00 → 08:00。【演绎】条文只给到「早晨 6～7 时起床」，起床之后这一小时没有出处。
+        "startMinute": 420,
+        "endMinute": 480,
+        "name": "晨起",
+        "kind": "休息",
+        "fade": true,
+        "flow": "醒着",
+        // 逐块显式写（ADR-0005：没有默认政策）。
+        "yieldsToInput": false
+      },
+      {
+        // 08:00 → 12:00。【演绎】这一段本身没有条文；边界由「早晨 6～7 时起床」往后推一小时得到。
+        "startMinute": 480,
+        "endMinute": 720,
+        "name": "上午",
+        "kind": "专注",
+        "fade": true,
+        "flow": "醒着",
+        "yieldsToInput": true
+      },
+      {
+        // 12:00 → 13:00。【演绎】正餐时段。条文只说「晚餐不宜过饱过晚」，没有说午餐几点。
+        "startMinute": 720,
+        "endMinute": 780,
+        "name": "午间",
+        "kind": "休息",
+        "fade": true,
+        "flow": "醒着",
+        "yieldsToInput": false
+      },
+      {
+        // 13:00 → 18:00。【演绎】同上，没有条文。
+        "startMinute": 780,
+        "endMinute": 1080,
+        "name": "下午",
+        "kind": "专注",
+        "fade": true,
+        "flow": "醒着",
+        "yieldsToInput": true
+      },
+      {
+        // 18:00 → 23:00。【演绎】边界由两条条文定出：第四条「避免熬夜」「晚餐不宜过饱过晚」
+        // 把正餐到就寝之间这一段留出来；末端 23:00 是第一条里 23:00 躺下的同一刻。
+        "startMinute": 1080,
+        "endMinute": 1380,
+        "name": "晚间",
+        "kind": "休息",
+        "fade": true,
+        "flow": "临睡",
+        // 显式写。**美国那一套**的常见写法是「7–9 小时」—— 但那一条**没有**用在这一份里：
+        // docs/research/healthy-sleep-guidance.md 记了两处冲突（抓到的那个站自己声明
+        // 「not affiliated with the National Sleep Foundation」；且它同一页上「7–9」与
+        // 「7 hours or more」自相矛盾）。这一份只按卫健委那一份的 7～8 小时。
+        "yieldsToInput": false
+      }
+    ]
+  }
+}

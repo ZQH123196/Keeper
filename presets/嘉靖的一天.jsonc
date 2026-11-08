@@ -1,0 +1,126 @@
+// 出处：演绎重构 —— 嘉靖的日常作息没有硬史料。这一份不是考证出来的，是照三条一手史料
+// 定出「一天的形状」之后重建的；下面每一块（含睡眠块）都标了「演绎重构」。
+// 依据三条（全部 2026-10-02 抓过原页面，逐条引文见 docs/research/jiajing-palace-routine.md）：
+//   1. 《明世宗實錄》卷二，嘉靖十三年（1534）九月丙寅条：「初，上于文華殿後建九五齋恭默室，
+//      為祭祀齋居之所，至是訖。」—— 斋居是他亲自安排、占一段正式时间的活动。
+//   2. 同上卷三，嘉靖二十九年条：「禮部尚書徐階因召對於西苑。」—— 西苑是他单独召见大臣的地方。
+//   3. 同上卷三馆臣按语：「時世廟修玄，盛端明與顧可學皆以此祟顯。」—— 修玄是他身边长期在办的一件事。
+// 这三条**只支撑「做什么、占一段时间」，不支撑任何一个具体时刻**。《明實錄》是事件与奏章的记录，
+// 不是起居注；嘉靖一朝没有留下逐时逐刻的起居记录。所以下面每一个时刻都是重建出来的。
+// Provenance: an interpretive reconstruction, not a documented routine. No hard historical source
+// exists for Jiajing's daily schedule. See docs/research/jiajing-palace-routine.md.
+{
+  "schemaVersion": 1,
+
+  "activityTimeoutMin": 15,
+  "flow": "fadetop",
+  "fadeInMs": 3000,
+  "fadeOutMs": 1000,
+  "maxOpacityPercent": 70,
+
+  // 遮罩上摆的是「状态实测结果 + 这一步自带的字 + 当前时间块的名字」。
+  // **块名只有作息表那一份真相**：`block` 由作息表替它算，下面的 `text` 不重写块名。
+  "flows": {
+    "斋居": {
+      "steps": [
+        {
+          "ms": 0,
+          "dismissible": true,
+          "interactive": false,
+          "content": ["clock", "block", "text"],
+          // 演绎：这一句是重建的，不是史料上的原话。
+          "text": "闭门，焚香，不见人。",
+          "sound": true
+        }
+      ]
+    },
+    "修玄": {
+      "steps": [
+        {
+          "ms": 0,
+          "dismissible": true,
+          "interactive": false,
+          "content": ["clock", "block", "text"],
+          // 演绎。落点：修玄这件事在他身边长期在办（依据 3），但没有一条史料说它占哪一段时间。
+          "text": "一整套做下来的功课，中途不换。",
+          "sound": true
+        }
+      ]
+    },
+    "西苑": {
+      "steps": [
+        {
+          "ms": 0,
+          "dismissible": true,
+          "interactive": false,
+          "content": ["clock", "block", "text"],
+          // 演绎。落点：大臣在这里被单独召见（依据 2）。
+          "text": "召对。说完就散。",
+          "sound": true
+        }
+      ]
+    }
+  },
+
+  "routine": {
+    "enabled": true,
+    "blocks": [
+      {
+        // 【演绎重构】21:00 → 05:00。没有任何史料给出他的就寝/起身时刻；
+        // 跨午夜读作一块。这一段取整成整六小时，纯粹是为了让表读得出来。
+        "startMinute": 1260,
+        "endMinute": 300,
+        "name": "夜",
+        // 种类里只有这一个取值带行为语义；文档里写的是英文那个取值，不是中文那两个字。
+        "kind": "sleep",
+        "fade": false,
+        "flow": "",
+        "yieldsToInput": true
+      },
+      {
+        // 【演绎重构】05:00 → 09:00。依据 1 定的是「斋居占一段正式时间」，
+        // 定不出几点开始 —— 5 点是重建的。
+        "startMinute": 300,
+        "endMinute": 540,
+        "name": "斋居诵经",
+        "kind": "斋居",
+        "fade": true,
+        "flow": "斋居",
+        // 逐块显式写（ADR-0005：没有默认政策）。这一段要让位 —— 它本来就是一个人待着的长段。
+        "yieldsToInput": true
+      },
+      {
+        // 【演绎重构】09:00 → 12:00。依据 3（修玄）定出「有这一件事」，定不出时长。
+        "startMinute": 540,
+        "endMinute": 720,
+        "name": "修玄",
+        "kind": "修玄",
+        "fade": true,
+        "flow": "修玄",
+        "yieldsToInput": true
+      },
+      {
+        // 【演绎重构】12:00 → 14:00。依据 2（西苑召对）定出「有这一场」，定不出时刻。
+        "startMinute": 720,
+        "endMinute": 840,
+        "name": "西苑",
+        "kind": "起居",
+        "fade": true,
+        "flow": "西苑",
+        "yieldsToInput": true
+      },
+      {
+        // 【演绎重构】14:00 → 21:00。这一块是上面三条撑起来的形状：
+        // 斋居、修玄、召对之后仍是一长段不被打断的独处 —— 依据 1 说斋居「占正式时间」，
+        // 至于多长、几点到几点，没有史料。
+        "startMinute": 840,
+        "endMinute": 1260,
+        "name": "斋居修道",
+        "kind": "斋居",
+        "fade": true,
+        "flow": "斋居",
+        "yieldsToInput": true
+      }
+    ]
+  }
+}

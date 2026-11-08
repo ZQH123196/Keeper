@@ -1,0 +1,131 @@
+// 出处：只取到「自律」这一个有出处的面向（人民网·中国共产党新闻网 2021-01-25，
+// 摘编自《福建党史月刊》：「因周恩来一贯严格要求自己」「严于律己」—— 且他要求身边人和他一样）。
+// **他的作息时刻没有查到任何史料**（《周恩来年谱》《周恩来传》未找到可抓取的正文；
+// 中文维基「周恩来」全文「午睡/睡觉/睡眠」各 0 次），所以下面每一块（含睡眠块）都标「演绎重构」。
+// **不做长工时复刻**（ADR-0005：那条路和这个产品存在的理由相反）。落法写在注释里：每个办事块 ≤ 5 小时。
+// Provenance: only his self-discipline is documented (People's Daily online, 2021-01-25).
+// No source for his clock times was reachable, so the whole table is an interpretive reconstruction,
+// and per ADR-0005 no long-working-hours replica is built. See
+// docs/research/zhou-enlai-self-discipline-and-rest.md.
+{
+  "schemaVersion": 1,
+
+  "activityTimeoutMin": 15,
+  "flow": "fadetop",
+  "fadeInMs": 3000,
+  "fadeOutMs": 1000,
+  "maxOpacityPercent": 70,
+
+  // 遮罩上摆的是「状态实测结果 + 这一步自带的字 + 当前时间块的名字」。
+  // **块名只有作息表那一份真相**：`block` 由作息表替它算，下面的 `text` 不重写块名。
+  "flows": {
+    "办事": {
+      "steps": [
+        {
+          "ms": 0,
+          "dismissible": true,
+          "interactive": false,
+          "content": ["clock", "block", "text"],
+          // 演绎：这一句是重建的，不是史料上的原话。
+          "text": "一件事办完，再开下一件。",
+          "sound": true
+        }
+      ]
+    },
+    "短憩": {
+      "steps": [
+        {
+          "ms": 0,
+          "dismissible": true,
+          "interactive": false,
+          "content": ["clock", "block", "text"],
+          // 演绎。这一份真正在演的是「一天里几次短的、有边界的休息」，
+          // 不是「工作多长」—— 后者按 ADR-0005 不做。
+          "text": "停一停。定时回来。",
+          "sound": true
+        }
+      ]
+    }
+  },
+
+  "routine": {
+    "enabled": true,
+    "blocks": [
+      {
+        // 【演绎重构】21:30 → 07:00，跨午夜读作一块。没有他的作息时刻史料；
+        // 9.5 小时是为了让这一段在表上读得出来而取整的，不是他的睡眠时长。
+        "startMinute": 1290,
+        "endMinute": 420,
+        "name": "夜",
+        // 种类里只有这一个取值带行为语义；文档里写的是英文那个取值，不是中文那两个字。
+        "kind": "sleep",
+        "fade": false,
+        "flow": "",
+        "yieldsToInput": true
+      },
+      {
+        // 【演绎重构】07:00 → 07:30。这一份的核心是那几个**短**的、有边界的休息块。
+        "startMinute": 420,
+        "endMinute": 450,
+        "name": "短憩 · 起身",
+        "kind": "休息",
+        "fade": true,
+        "flow": "短憩",
+        // 逐块显式写（ADR-0005：没有默认政策）。休息块让位，免得它自己被提醒打碎。
+        "yieldsToInput": true
+      },
+      {
+        // 【演绎重构】07:30 → 12:00，4.5 小时。**不超过 5 小时 —— 这就是「不做长工时复刻」
+        // 在这一份里的落法**：它是一条能被逐块核对的设计规则，不是考证。
+        "startMinute": 450,
+        "endMinute": 720,
+        "name": "上午办事",
+        "kind": "专注",
+        "fade": true,
+        "flow": "办事",
+        // 显式写：这一段要的是不被输入提醒打断。
+        "yieldsToInput": true
+      },
+      {
+        // 【演绎重构】12:00 → 13:00。整份里最长的一次短憩。
+        "startMinute": 720,
+        "endMinute": 780,
+        "name": "短憩 · 午间",
+        "kind": "休息",
+        "fade": true,
+        "flow": "短憩",
+        "yieldsToInput": true
+      },
+      {
+        // 【演绎重构】13:00 → 17:30，4.5 小时（同样 ≤ 5 小时）。
+        "startMinute": 780,
+        "endMinute": 1050,
+        "name": "下午办事",
+        "kind": "专注",
+        "fade": true,
+        "flow": "办事",
+        "yieldsToInput": true
+      },
+      {
+        // 【演绎重构】17:30 → 18:00，30 分钟。
+        "startMinute": 1050,
+        "endMinute": 1080,
+        "name": "短憩 · 收束",
+        "kind": "休息",
+        "fade": true,
+        "flow": "短憩",
+        "yieldsToInput": true
+      },
+      {
+        // 【演绎重构】18:00 → 21:30，3.5 小时（同样 ≤ 5 小时）。
+        "startMinute": 1080,
+        "endMinute": 1290,
+        "name": "晚间收尾",
+        "kind": "专注",
+        "fade": true,
+        "flow": "办事",
+        "yieldsToInput": true
+      }
+    ]
+  }
+}

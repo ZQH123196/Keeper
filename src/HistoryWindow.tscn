@@ -1,0 +1,73 @@
+; 休息历史小窗：560x460。托盘一条、设置窗一格，两处开的是同一扇。
+;
+; **一天一行用引擎给的 Tree**（契约「休息历史是只读的记录读法」那一节：不 owner-draw、
+; 不 `_draw` 手画表格）。顶层 item 是一天，那天那几条是它的子 item，点前面那颗三角展开/收起。
+; 一天只摆「日期 + 提示了几次 / 休息过了几次」，点开才摆那几次各自几点、休息了还是跳过了
+; —— 契约说只有两层，不做第三层。
+;
+; **三档由同一棵树摆出来，它们必须长得不一样**：
+; ① 有记录 → 摆那些天；② 一条记录都没有 → 摆一句「还没记过休息」；
+; ③ 读不通 → 摆一句「休息记录读不通」。**③ 不是 ②**：② 读起来是「你没休息过」，
+; 而磁盘上那份读不通的人明明记过。所以 Blank 那一句是三档里最先被读到的东西。
+;
+; Blank 摆在 Scroll 上面而不是塞进树里：它是「没有行可摆」时说的话，
+; 有行的时候它整个收起来（Visible = false），不占一行地方。
+;
+; 根节点那一条 visible = false 和 About.tscn / Options.tscn 同一条理由：一扇窗按
+; visible = true 进树，引擎当场就按它自己给的位置建一扇窗，而位置要等 _Ready 算完才算得出 ——
+; 那一段时间里屏幕上是一扇什么都没画过的窗。
+
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/HistoryWindow.cs" id="1"]
+
+[sub_resource type="Theme" id="Theme_light"]
+default_font_size = 13
+Label/colors/font_color = Color(0.11, 0.129, 0.122, 1)
+
+[node name="HistoryWindow" type="Window"]
+title = "休息历史"
+size = Vector2i(560, 460)
+visible = false
+unresizable = false
+init_toplevel = false
+theme = SubResource("Theme_light")
+script = ExtResource("1")
+
+[node name="Page" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.957, 0.965, 0.961, 1)
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
+
+[node name="Stack" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Head" type="Label" parent="Margin/Stack"]
+layout_mode = 2
+
+[node name="Blank" type="Label" parent="Margin/Stack"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.466, 0.443, 1)
+autowrap_mode = 2
+visible = false
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/Stack"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Days" type="Tree" parent="Margin/Stack/Scroll"]
+custom_minimum_size = Vector2(496, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 1

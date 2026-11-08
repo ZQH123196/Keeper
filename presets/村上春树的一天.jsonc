@@ -1,0 +1,123 @@
+// 出处：村上春树本人历年反复公开讲过的那一套作息（凌晨起床、晨间长写作、跑步、早睡）。
+// 逐块的时刻与出处见 docs/research/murakami-daily-routine.md —— 那里面每一条来源都在 2026-10-02
+// 实际抓过原页面；抓不到的、没查到的，都写在同一份文档的「没查到」一节。
+// Provenance: the daily routine Murakami himself has stated publicly and repeatedly (early rise,
+// long morning writing session, running, early sleep). Every clock time below traces to a source
+// in docs/research/murakami-daily-routine.md, each fetched on 2026-10-02.
+{
+  "schemaVersion": 1,
+
+  "activityTimeoutMin": 15,
+  "flow": "fadetop",
+  "fadeInMs": 3000,
+  "fadeOutMs": 1000,
+  "maxOpacityPercent": 70,
+
+  // 遮罩上摆的是「状态实测结果 + 这一步自带的字 + 当前时间块的名字」。
+  // **块名只有作息表那一份真相**：content 里的 `block` 由作息表替它算（不存任何字），
+  // 所以下面每一步的 `text` 都**不重写**块名（ADR-0005「遮罩文字正本清源」那一节）。
+  "flows": {
+    "晨间": {
+      "steps": [
+        {
+          "ms": 0,
+          "dismissible": true,
+          "interactive": false,
+          "content": ["clock", "block", "text"],
+          // 《卫报》2014-09-13 访谈原话：「I wake up early in the morning and I play a record,
+          // a vinyl record, when I'm writing.」—— 这一步在演的就是那半句。
+          "text": "听着一张唱片写下去。",
+          "sound": true
+        }
+      ]
+    },
+    "跑动之后": {
+      "steps": [
+        {
+          "ms": 0,
+          "dismissible": true,
+          "interactive": false,
+          "content": ["clock", "block", "text"],
+          "text": "一天里最清楚的一段路。",
+          "sound": true
+        }
+      ]
+    },
+    "其余": {
+      "steps": [
+        {
+          "ms": 0,
+          "dismissible": true,
+          "interactive": false,
+          "content": ["clock", "block", "text"],
+          // 日文维基百科「村上春樹」§私生活：「日が暮れたら仕事はせずに」。
+          "text": "天黑之后不再写。",
+          "sound": true
+        }
+      ]
+    }
+  },
+
+  // 作息表：22:30 → 06:30 是一**块**（止不晚于起读作跨到次日），不是两块。
+  "routine": {
+    "enabled": true,
+    "blocks": [
+      {
+        // 来源：就寝时刻 21:00 之后 —— 日文维基百科「村上春樹」§私生活同段：
+        // 「夜は9時すぎには就寝する」。跨午夜的一块。
+        "startMinute": 1260,
+        "endMinute": 240,
+        "name": "夜",
+        // 种类里**只有这一个取值带行为语义**：这一块里什么提醒都不抬遮罩。
+        // 文档里写的是英文那个取值，不是中文那两个字。
+        "kind": "sleep",
+        "fade": false,
+        "flow": "",
+        "yieldsToInput": true
+      },
+      {
+        // 来源：《卫报》2018-10-11 图片说明原文：「rises at 4am to write for
+        // five or six hours before a six-mile run and a swim」。
+        // **写到 11:00 是取并集**：那一页说 5–6 小时，而《当我谈跑步时我谈些什么》的中文
+        // 转录说「写作 4 小时」（docs/research/murakami-daily-routine.md 第四节，并记了
+        // 它那篇自身矛盾：说 1996 年时自己「只有30多岁」，那年他 47 岁，所以那一版不承重）。
+        // 两个说法差一小时，包住两者的最短一段就是 04:00–11:00。
+        "startMinute": 240,
+        "endMinute": 660,
+        "name": "晨间写作",
+        "kind": "专注",
+        "fade": true,
+        "flow": "晨间",
+        // **这一行必须显式写**：种类只是标签，不给任何默认政策（ADR-0005「「睡眠」这个
+        // 种类的静默是种类语义，不是默认政策」）。漏写就是碎 —— 输入提醒会在这段
+        // 长写作的中途插一次遮罩。默认值恰好也是 true，但「碰巧对」不算「写了」。
+        "yieldsToInput": true
+      },
+      {
+        // 来源：同一句「before a six-mile run and a swim」把跑步和游泳排在写作之后。
+        // 6 英里 ≈ 9.7 公里，与下一行的「10km」是同一件事。
+        "startMinute": 660,
+        "endMinute": 720,
+        "name": "跑步与游泳",
+        "kind": "运动",
+        "fade": true,
+        "flow": "跑动之后",
+        // 显式写。理由是设计上的：在路上跑的时候屏幕忽然淡入没有意义。
+        "yieldsToInput": true
+      },
+      {
+        // 12:00–21:00 —— **演绎重构**：上面四节来源里没有一句讲午后怎么过，
+        // 那一段只是把「天黑之后不写」之前的其余时间收成一个块。
+        "startMinute": 720,
+        "endMinute": 1260,
+        "name": "午后",
+        "kind": "休息",
+        "fade": true,
+        "flow": "其余",
+        // 显式写，而且这里是 **false**：这一段本来就是空着的，连着用了太久提醒一次有用。
+        // （专注那一段才是必须让位的那一段 —— 两种写法都在表上，看得见差别。）
+        "yieldsToInput": false
+      }
+    ]
+  }
+}

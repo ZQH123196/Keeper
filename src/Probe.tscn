@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/Probe.cs" id="1_probe"]
+
+[node name="Probe" type="Node"]
+script = ExtResource("1_probe")
+
+[node name="Layer" type="CanvasLayer" parent="."]
+
+[node name="Fill" type="ColorRect" parent="Layer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.501961, 0.25098, 1)
+
+[node name="Label" type="Label" parent="Layer"]
+offset_left = 14.0
+offset_top = 12.0
+offset_right = 420.0
+offset_bottom = 36.0
+text = "keeper probe — measuring, do not touch"

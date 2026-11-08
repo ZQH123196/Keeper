@@ -1,0 +1,119 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/FaderPicture.cs" id="2"]
+
+; 这一棵树 2026-10-06 起只是**控件池**，不是排版：屏上摆什么、摆哪、摆多大，全在
+; 每一步自己那一份布局里（契约「遮罩的布局是每一步自己那一份」，形状在 src/StepLayout.cs）。
+; 所以节点之间**不再有兄弟序以外的约束** —— 锚点由 Fader.Enter 按布局给的份额写，
+; 谁在谁的上面由布局那个数组的次序决定（这一树的兄弟序只是「都还没摆上」时的默认次序）。
+;
+; 2026-10-06 之前这里是两列写死的排版：中间一族（Middle/Stack 的竖排 VBox）加侧面
+; 一列（Side/Stack）。两列都撤了 —— 理由和次序为什么降级成「默认布局」在契约
+; 「遮罩的布局是每一步自己那一份」那一节。那一族的**次序和字号没撤**，它们就是
+; StepLayout.Default() 那一份的数字；这一份树只负责「有这些控件」。
+[node name="Content" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Fill" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+; 遮罩背后那张图（image.enabled / image.file / image.position，顶层那几个键）。摆在 Fill 之上、
+; 字下面，所以它是「纯色底上面、字下面」那一层。它不跟着换步藏露，只跟着整窗那条 alpha
+; 斜坡一起深浅 —— 顶层 image 那三个键不是某一步的布局，所以这一层不由布局摆。
+; mouse_filter 必须是 2（Ignore）：铺满整窗的一层只要吃住命中测试，点得到的那几块就全点不动
+; （CODING_STANDARDS.md 代码级规矩 mouse_filter 那一条）。
+; clip_contents 做 cover 和 tile 那一档的裁切：伸出窗外的那一块不该画出来。
+[node name="Picture" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+clip_contents = true
+script = ExtResource("2")
+
+; ── 中间那一族：时钟、倒计时、时间块名 ──
+;
+; 三颗都是 **Content 的直接子节点**，不再待在任何容器里。原因是布局给的份额是**绝对**的一份
+; （左缘、上缘、宽、高各按屏宽屏高的百分之一），容器替不了这件事：竖排容器会把它们排成一列，
+; 那正是 2026-10-06 撤掉的那条取向。
+; 各自的那一块由 Fader.Enter 写锚点（AnchorLeft=x、AnchorRight=x+w、四个 offset 全 0），
+; 所以换一块屏换的是画面，不是那份布局。场景里写的是「都还没摆上」的初值。
+
+[node name="Clock" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+horizontal_alignment = 1
+
+; 倒计时（界面上写「还剩 m:ss」，代码这一族叫 Remain）。**它跟不跟着这一步的 ms 走是契约定死
+; 的**：`ms` 为 0 或不写就是「一直站到别的事结束它」，没有到期时刻也就没有倒计时 ——
+; 布局里摆没摆它都不出现，这一条不给用户选（Fader.Enter 那一条分支）。
+; 横着居中：布局给的框是屏宽的八成，字在框里居中，和今天一样。
+[node name="Remain" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+horizontal_alignment = 1
+
+; 当前时间块的名字。它是布局里**唯一动态**的一个控件：自己一个字都不存，此刻的名字由
+; 作息表替它算（Fader.BuildBlock → Tray.BlockRowName）。没有作息表、或此刻不在任何块里，
+; 它空着 —— 那一档和「有名字」是同一种空，屏幕上那一行不出现（不是一行空的）。
+[node name="Block" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+horizontal_alignment = 1
+
+; ── 侧面那一块：休息清单 ──
+;
+; **这一列为什么还留着 CenterContainer**：清单那几行是**几条就多高**的（行是换步时现搭的，
+; 见 Fader.BuildChecklist），今天它们在整列里竖着居中。布局给的是**那一列**的框，
+; 列里面那一竖排照旧居中 —— 换句话说这一层容器管的是「清单内部怎么摆」，
+; 「清单摆在哪」由布局说了算（下面那两个锚点由 Fader.Enter 按份额写）。
+; 留着它也是为了清单折行的上限：上限是这一列的宽度（BuildChecklist 里 column 那一句）。
+;
+; mouse_filter 一样是 2：这一层不吃点击，那几行和那颗钮自己吃。
+
+[node name="Side" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+mouse_filter = 2
+
+[node name="Stack" type="VBoxContainer" parent="Side"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Checklist" type="VBoxContainer" parent="Side/Stack"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+
+; 「清单是空的」那一行，按清单那一行的字号（它替的是清单那一块）。
+[node name="Empty" type="Label" parent="Side/Stack"]
+visible = false
+layout_mode = 2
+horizontal_alignment = 1
+
+; ── 「提前结束休息」那颗钮 ──
+;
+; 它自己外面套一层 CenterContainer，理由和上面那一列一样：布局给的是一个**框**，
+; 而这颗钮的宽度是它的字加内边距算出来的（今天 272x71），撑不满一个框。
+; 套一层就是把「按自己的宽度摆在框的正当中」交给引擎，位置仍然来自布局的那一份份额。
+;
+; 它为什么在这一带而不是屏幕正中：「点得到的那几块」按点得到的东西算矩形，钮和清单分处
+; 两块的话它要算住它们中间那大半块屏（ADR-0003「点得到的那几块交给钩子按坐标判」那一节）。
+[node name="End" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+mouse_filter = 2
+
+[node name="EndBtn" type="Button" parent="End"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4

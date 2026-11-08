@@ -1,0 +1,308 @@
+keys,zh,en
+提前结束休息,提前结束休息,End the break
+进入休息,进入休息,Start a break
+桌面日历,桌面日历,Desktop Calendar
+自动淡入,自动淡入,Auto Fade
+番茄钟,番茄钟,Pomodoro
+设置…,设置…,Options…
+关于 Keeper,关于 Keeper,About Keeper
+退出,退出,Exit
+Keeper — 休息提醒,Keeper — 休息提醒,Keeper — break reminder
+Keeper — 休息一下,Keeper — 休息一下,Keeper — take a breath
+Keeper — 番茄钟,Keeper — 番茄钟,Keeper — Pomodoro
+Keeper — 自动淡入已关闭,Keeper — 自动淡入已关闭,Keeper — Auto Fade is off
+Keeper 设置,Keeper 设置,Keeper Settings
+时间,时间,Timing
+遮罩,遮罩,The fade
+休息提醒,休息提醒,Breaks
+搜索设置,搜索设置,Search settings
+显示高级设置,显示高级设置,Show advanced settings
+休息清单,休息清单,Break checklist
+背景图片,背景图片,Background picture
+提示音,提示音,Sound
+系统,系统,System
+activityTimeoutMin,连续活动提醒间隔,Fade after this much continuous use
+activityTimeoutMin.unit,分钟,minutes
+unit.minute,分钟,minutes
+unit.minute.one,分钟,minute
+unit.second,秒,seconds
+unit.second.one,秒,second
+pomodoro.workMin,番茄钟专注段多长,Pomodoro focus stretch
+pomodoro.workMin.unit,分钟,minutes
+minBreakMs,停留多久算真正休息,How long a fade must last to count as a break
+restDelay,休息延迟,Rest delay
+restDelay.unit,分钟,minutes
+triggerPauseMs,等待输入间隙,Fade in during a lull this long
+dismissHoldMs,多久连续操作才算回到工作,Input this sustained counts as being back
+maxOpacityPercent,最大不透明度,Darkest the fade gets
+maxOpacityPercent.unit,%,%
+fadeInMs,淡入时长,Fade in
+fadeOutMs,淡出时长,Fade out
+stayOnTopAfterLanding,落定之后还压着别的窗口,Keep other windows behind it after landing
+textScalePercent,文字大小,Text size
+textScalePercent.unit,%,%
+foregroundColor,前景色,Text colour
+backgroundColor,背景色,Background colour
+clock24Hour,24 小时制,24 hour clock
+allMonitors,所有显示器同时淡入,Fade every monitor
+blockWhenFullscreen,全屏应用时不提醒,Stay out of full screen applications
+language,界面语言,Language
+zh,中文,Chinese
+en,English,English
+flow,这次休息走哪一条,The flow this break walks
+image.enabled,使用图片,Use a picture
+image.file,图片文件,Picture file
+image.position,铺法,How it covers the screen
+fill,铺满,Fill
+fit,按比例放进,Fit
+stretch,拉伸,Stretch
+tile,平铺,Tile
+center,居中,Center
+sound.enabled,播放提示音,Play a sound
+sound.file,音频文件,Sound file
+sound.volume,音量,Volume
+sound.volume.unit,%,%
+sound.fadeIn,声音淡入,Ramp it in
+sound.fadeOut,声音淡出,Ramp it out
+sound.repeat,循环播放,Repeat it
+sound.afterLanding,落定之后才响,After it lands
+calendar.enabled,在桌面上显示日历,Keep the calendar on the desktop
+calendar.style,样式,Style
+wallpaper,铺满桌面的月历,Month spread over the desktop
+outline,只有格线的月历,Bare grid over the wallpaper
+widget,角落里的小面板,Compact corner panel
+calendar.corner,贴在哪个角,Which corner
+topLeft,左上,Top left
+topRight,右上,Top right
+bottomLeft,左下,Bottom left
+bottomRight,右下,Bottom right
+calendar.widthPercent,横向占桌面多少,Share of the desktop sideways
+calendar.widthPercent.unit,%,%
+calendar.heightPercent,纵向占桌面多少,Share of the desktop up and down
+calendar.heightPercent.unit,%,%
+calendar.widgetWidthPercent,面板横向占多少,Panel width as a share
+calendar.widgetWidthPercent.unit,%,%
+calendar.headerPercent,抬头那一行占多少,Header band as a share
+calendar.headerPercent.unit,%,%
+calendar.marginXPercent,离侧边多远,Distance from the side
+calendar.marginXPercent.unit,%,%
+calendar.marginYPercent,离上下多远,Distance from the top or bottom
+calendar.marginYPercent.unit,%,%
+calendar.textPercent,字多大,How big the text
+calendar.textPercent.unit,%,%
+calendar.opacityPercent,底板浓度,How solid it looks
+calendar.opacityPercent.unit,%,%
+calendar.weekStartsMonday,周一为一周的开始,Start the week on Monday
+calendar.showLunar,日期下面写农历,Write the lunar date under each day
+autostart,开机自动启动,Start at sign-in
+autoFade,自动淡入,Auto fade
+距下次淡入,距下次淡入,Next fade in
+分钟,分钟,min
+健康度,健康度,Health
+还剩,还剩,Left
+休息记录,休息记录,Breaks
+休息时显示在绿幕上，可以勾选,休息时显示在绿幕上，可以勾选,Shown on the fade during a break — tick them off there
+写点什么…,写点什么…,Add something…
+添加一项,添加一项,Add
+删除,删除,Delete
+预览遮罩,预览遮罩,Preview the fade
+导出…,导出…,Export…
+导入…,导入…,Import…
+恢复默认,恢复默认,Restore defaults
+保存,保存,Save
+浏览…,浏览…,Browse…
+选一个文件,选一个文件,Pick a file
+导出到,导出到,Export to
+已导出,已导出,Exported
+导出没成,导出没成,Export failed
+已导入,已导入,Imported
+导入没成,导入没成,Import failed
+这份文档的格式版本比本程序新,这份文档的格式版本比本程序新,That document is stamped newer than this build
+每个键都回到了声明表里的默认值，按保存才写进文件,每个键都回到了声明表里的默认值，按保存才写进文件,Every key is back on its declared default — it reaches the file only when you save
+磁盘上那份读不通，所以没有保存,磁盘上那份读不通，所以没有保存,The document on disk does not parse — nothing was saved
+磁盘上那份读不通,磁盘上那份读不通,The document on disk does not parse
+保存没成,保存没成,Save failed
+界面上的值还在，文件没动,界面上的值还在，文件没动,the window still holds these values and the file is untouched
+已保存,已保存,Saved
+没有改动,没有改动,no changes
+颜色要写成 #RRGGBB,颜色要写成 #RRGGBB,A colour is written #RRGGBB
+周一,周一,Mon
+周二,周二,Tue
+周三,周三,Wed
+周四,周四,Thu
+周五,周五,Fri
+周六,周六,Sat
+周日,周日,Sun
+yyyy年M月,yyyy年M月,MMMM yyyy
+M月d日ddd,M月d日ddd,ddd d MMMM
+农历,农历,Lunar
+今天是,今天是,Today is
+休息提醒，自然而然,休息提醒，自然而然,"Break reminder, the natural style"
+当你在键盘前坐了太久，Keeper 会把屏幕缓缓染成一片颜色；等你确实回到工作上，它又缓缓退去。它不拦截任何操作，也不要求你做什么——只是换掉屋里的光。,"当你在键盘前坐了太久，Keeper 会把屏幕缓缓染成一片颜色；等你确实回到工作上，它又缓缓退去。它不拦截任何操作，也不要求你做什么——只是换掉屋里的光。","When you have been at the keyboard too long, Keeper slowly fades your screen into a colour, and fades away again once you are clearly back at work. Nothing is blocked, nothing is demanded — it just changes the light."
+版本 {v},版本 {v},version {v}
+交互方式参照 fadetop.com 的 FadeTop,交互方式参照 fadetop.com 的 FadeTop,interaction model modelled on FadeTop by fadetop.com
+休息流程,休息流程,Break flows
+flows.hint,一条休息流程是这一次休息一步一步走下来的路。名字是你起的，每一条下面挂着它要走的那几步。,"A break flow is the walk a break takes, one step at a time. You name it; each one holds the steps it walks through."
+这条叫什么,这条叫什么,Name this flow
+第 N 步,第 {n} 步,Step {n}
+挥得散,挥得散,Waving drives it away
+接鼠标,接鼠标,Takes the mouse
+放声音,放声音,Plays the sound
+摆什么,摆什么,What it shows
+上移,上移,Move up
+下移,下移,Move down
+删掉这一步,删掉这一步,Delete this step
+新增一条,新增一条,New flow
+删掉这一条,删掉这一条,Delete this one
+加一步,加一步,Add a step
+新休息流程,新休息流程,New flow
+已经有这条休息流程,已经有这条休息流程,A flow already has that name
+共 N 步,共 {n} 步,{n} steps
+共 N 步.one,共 {n} 步,{n} step
+一步总得摆点东西，所以那三样又回来了,一步总得摆点东西，所以那三样又回来了,"A step has to show something, so those three are back"
+这张表里还没有一条休息流程,这张表里还没有一条休息流程,This table has no flows yet
+一步都没有，它就只淡进来,一步都没有，它就只淡进来,"It holds no step, so it only fades in"
+clock,时钟,Clock
+trail,休息轨迹,Break trail
+health,健康指数,Health index
+checklist,休息清单,Checklist
+text,文字,Words
+block,时间块,Time block
+文字,文字,Words
+清单是空的,清单是空的,Nothing on the list
+uiTheme,设置窗自己的配色,The settings window's own colours
+light,亮色,Light
+dark,暗色,Dark
+遮罩预览,遮罩长这样,How the mask looks
+设置窗自己的配色读不出来,设置窗自己的配色读不出来,The settings window's colours could not be loaded
+生活模式：{0},生活模式：{0},Life mode: {0}
+还没有生活模式,还没有生活模式,No life mode yet
+不在任何生活模式里,不在任何生活模式里,Not in any life mode
+切换,切换,Switch
+保存并切换,保存并切换,Save and switch
+存为新生活模式,存为新生活模式,Save as a new life mode
+盖回一个生活模式…,盖回一个生活模式…,Overwrite a life mode…
+盖回哪个生活模式,盖回哪个生活模式,Which life mode to overwrite
+删掉这个生活模式,删掉这个生活模式,Delete this life mode
+盖回去,盖回去,Overwrite
+删掉,删掉,Delete
+已盖回生活模式,已盖回生活模式,Overwritten into it
+已保存并切到生活模式,已保存并切到生活模式,Saved and switched to it
+删掉没成,删掉没成,Could not delete it
+已删掉生活模式,已删掉生活模式,Deleted that life mode
+已从名单里删掉,已从名单里删掉,Removed from the list
+保存没成，所以没有切,保存没成，所以没有切,"Saving did not go through, so nothing was switched"
+要盖回去就按「盖回一个生活模式…」,要盖回去就按「盖回一个生活模式…」,"To replace it, press ""Overwrite a life mode…"""
+删掉以后它就不在了，它的编号不会拿去给下一个新生活模式用,删掉以后它就不在了，它的编号不会拿去给下一个新生活模式用,"Once deleted it is gone, and its number is never handed to another life mode"
+你不在任何生活模式里，没有可删的,你不在任何生活模式里，没有可删的,"You are not in any life mode, so there is nothing to delete"
+给这个生活模式起个名,给这个生活模式起个名,Name this life mode
+生活模式名,生活模式名,Life mode name
+确定,确定,OK
+取消,取消,Cancel
+已存为新生活模式,已存为新生活模式,Saved as a new life mode
+已切到生活模式,已切到生活模式,Switched to it
+切换没成,切换没成,Could not switch to it
+窗里没保存的改动没有算进去,窗里没保存的改动没有算进去,"Unsaved changes in this window were not part of it"
+生活模式名单读不通,生活模式名单读不通,Life mode list unreadable
+生活模式,生活模式,Life modes
+管理生活模式…,管理生活模式…,Manage life modes…
+生活模式名单读不通，一个生活模式也没认出来；磁盘上那一份没有动过,生活模式名单读不通，一个生活模式也没认出来；磁盘上那一份没有动过,"The life mode list could not be read, so no life modes were recognized; the copy on disk was left alone"
+生活模式「{0}」读不通，所以没有切,生活模式「{0}」读不通，所以没有切,"Life mode ""{0}"" could not be read, so it was not switched to"
+名单里有「{0}」，可它那一份已经不在了 —— 没有替它补上一个,名单里有「{0}」，可它那一份已经不在了 —— 没有替它补上一个,"""{0}"" is in the list, but its copy is gone — nothing was put in its place"
+名单里没有「{0}」，所以没有切,名单里没有「{0}」，所以没有切,"There is no mode named ""{0}"", so it was not switched to"
+从一份文件收一个生活模式进来…,从一份文件收一个生活模式进来…,Take in a life mode from a file…
+收进来,收进来,Take it in
+已收下生活模式,已收下生活模式,Taken in as a life mode
+你现在这份配置没动过,你现在这份配置没动过,the settings you have now are untouched
+还没有挑要收进来的那一份文件,还没有挑要收进来的那一份文件,No file has been picked to take in yet
+作息,作息,Daily Routine
+时间块,时间块,Time Block
+break.left,下次休息还有,due for the next break in
+routine.enabled,整张作息表要不要用,Use the daily routine
+routine.hint,一行一个时间块。不晚于开始的时刻读作跨到次日：22:30 到 06:30 是一夜的一块，不两块。,"One time block per row. A time at or before the one it starts at reads as running into the next day: 22:30 to 06:30 is one block, a night, not two."
+第 N 块,第 {n} 块,Block {n}
+共 N 块,共 {n} 块,{n} blocks
+共 N 块.one,共 {n} 块,{n} block
+删掉这一块,删掉这一块,Delete this block
+加一个时间块,加一个时间块,Add a time block
+还没有时间块,还没有时间块,No time block yet
+blocks[].unit.hour,点,o'clock
+blocks[].unit.minute,分,min
+blocks[].flow.none,跟着设置里那一条,Same as the setting
+blocks[].startMinute,从几点开始,Starts at
+blocks[].endMinute,到几点为止,Ends at
+blocks[].name,叫什么,Name
+blocks[].kind,是哪一种,Kind
+blocks[].flow,到点走哪条休息流程,Flow when it begins
+blocks[].fade,到点抬不抬遮罩,Fade up when it begins
+blocks[].yieldsToInput,输入提醒让不让位,Lets the input reminder wait
+勿扰,勿扰,Do not disturb
+勿扰中,勿扰中,Do not disturb on
+dnd.enabled,勿扰要不要用,Use Do not disturb
+dnd.hint.windows,一行一条时段。不晚于开始的时刻读作跨到次日，而且整段挂在开始的那一天：周一 22:30 到 06:30 盖住周一夜到周二晨。,"One time per row. A time at or before the one it starts at reads as running into the next day, and the whole of it hangs on the day it starts: Monday 22:30 to 06:30 covers Monday night through Tuesday morning."
+dnd.hint.apps,一行一个可执行文件名。整名对上才算，大小写不算。,"One executable file name per row. The whole name has to match, and case does not count."
+dnd.fore,此刻占着前台的是,In the foreground right now
+dnd.fore.app,前台应用,Foreground app
+dnd.fore.path,路径,Path
+dnd.fore.none,问不到（没有前台窗、打开被拒、或那一扇窗读不出身份）,"Not available (no foreground window, opening it was denied, or that window has no readable identity)"
+dnd.why.window,时段 {0}（{1}）,the time {0} ({1})
+dnd.why.app,名单里的 {0},{0} from the list
+第 N 条,第 {n} 条,Row {n}
+共 N 条,共 {n} 条,{n} rows
+共 N 条.one,共 {n} 条,{n} row
+加一个时段,加一个时段,Add a time
+还没有时段,还没有时段,No time yet
+加一个名字,加一个名字,Add a name
+删掉这个名字,删掉这个名字,Delete this name
+还没有名字,还没有名字,No name yet
+windows[].startMinute,从几点开始,Starts at
+windows[].endMinute,到几点为止,Ends at
+windows[].weekdays,星期几,Weekdays
+预设生活模式…,预设生活模式…,preset life modes…
+预设生活模式,预设生活模式,preset life modes
+关掉,关掉,Close
+这些是随安装带来的只读模板，收一个进来才算自己的,这些是随安装带来的只读模板，收一个进来才算自己的,Read-only templates that ship with Keeper. Take one in to make it yours.
+一个预设生活模式都没有,一个预设生活模式都没有,There are no preset life modes
+预设生活模式那一整个目录不在了 —— 带在安装里的那几份一份也取不到,预设生活模式那一整个目录不在了 —— 带在安装里的那几份一份也取不到,"The whole folder of preset life modes is gone — none of the ones that ship with Keeper can be reached"
+有的预设生活模式读不通，那一份收不进来,有的预设生活模式读不通，那一份收不进来,"Some preset life modes cannot be read, and those are not taken in"
+预设生活模式「{0}」读不通，所以没有收进来,预设生活模式「{0}」读不通，所以没有收进来,"Preset life mode {0} cannot be read, so it is not taken in"
+预设生活模式的画廊开不出来,预设生活模式的画廊开不出来,The preset life mode gallery cannot be opened
+
+remain,倒计时,Countdown
+end,提前结束休息,End the break
+image,图,Image
+布局,布局,Layout
+这一步的屏,这一步的屏,This step's screen
+摆这一屏…,摆这一屏…,Arrange this screen…
+在编辑器里拖：决定这一步遮罩上有什么、在哪、多大,在编辑器里拖：决定这一步遮罩上有什么、在哪、多大,"Drag in the editor: what this step puts on the fade, where, and how big"
+遮罩亮着的时候这里改的，要等下一次休息才用上,遮罩亮着的时候这里改的，要等下一次休息才用上,Changes made here take effect on the next break
+选一颗控件就能改它的字、摆法和字号,选一颗控件就能改它的字、摆法和字号,"Pick a control to change its words, fit and size"
+往前一层,往前一层,Bring forward
+往后一层,往后一层,Send backward
+回到默认布局,回到默认布局,Restore the default layout
+照抄上一步的布局,照抄上一步的布局,Copy the previous step's layout
+摆一个文字,摆一个文字,Add words
+摆一张图,摆一张图,Add an image
+摆法,摆法,Fit
+字号,字号,Size
+没有一步可摆,没有一步可摆,There is no step to lay out
+选中了,选中了,Picked
+先选一颗控件,先选一颗控件,Pick a control first
+前面没有一步，照抄不了,前面没有一步，照抄不了,There is no step before this one so there is nothing to copy
+照抄了上一步的布局,照抄了上一步的布局,Copied the previous step's layout
+摆了一个,摆了一个,Added
+路径,路径,Path
+画布和屏一个比例,画布和屏一个比例,The canvas has the same proportions as the screen
+时间块名,时间块名,Time block name
+休息历史,休息历史,Rest History
+休息历史…,休息历史…,Rest history…
+打开休息历史…,打开休息历史…,Open the rest history…
+今天还没有休息,今天还没有休息,No break yet today
+历史,历史,History
+一天的休息记录,一天的休息记录,"Breaks, one day at a time"
+提示 {0} 次 · 休息过 {1} 次,提示 {0} 次 · 休息过 {1} 次,{0} prompts · {1} breaks taken
+休息过了,休息过了,Took the break
+跳过了,跳过了,Skipped
+还没记过休息,还没记过休息,No breaks recorded yet
+休息记录读不通,休息记录读不通,The break record could not be read
+这一份程序没有抹掉，也没有往里写新的一条。,这一份程序没有抹掉，也没有往里写新的一条。,"Keeper has not overwritten it, and has not written a new entry into it."

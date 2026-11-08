@@ -1,0 +1,5 @@
+# Normalize EOL for all files that Git considers text files.
+* text=auto eol=lf
+
+# cmd.exe 只在 CRLF 上可靠：块语句（括号里那几行）和标签遇到 LF 会报「命令语法不正确」。
+*.bat text eol=crlf

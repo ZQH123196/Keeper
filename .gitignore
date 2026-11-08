@@ -1,0 +1,64 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# .scratch/ 是本机的工作面：产品契约、欠账清单、工单都在这儿。
+# 整个目录不进版本库。2026-10-21 把里面早先被提交的 40 个文件移出索引 ——
+# ignore 规则对已跟踪的文件不生效，光写这一行不够，索引里也得没有。
+.scratch/
+
+# 临时产出与本机产物，不进版本库。落点为什么是根目录 .tmp/、怎么分 .tmp/ 和 .tmp/cache/，
+# 写在 CODING_STANDARDS.md「临时产出的落点」那一节，这里不重述。
+# .tmp/gitBackup.bundle 是 22 MB 的 git bundle 备份，也归 .tmp/* 管
+# （2026-09-30 加这条时它在上一个去处 .cache/）。
+# 两个 .gitkeep 留着目录本身：git 不记空目录，少了它换台机器 clone 就没有这两个去处。
+.tmp/*
+!.tmp/.gitkeep
+!.tmp/cache/
+.tmp/cache/*
+!.tmp/cache/.gitkeep
+
+# IDE 的本机设置与环境（2026-11-08 加）：跟着机器走，不跟着仓库走。
+.qoder/
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.code-workspace
+
+# .scratch/tmp 里跑生成器（Options.tscn、两张 .tres）留下的 Python 字节码。
+# 生成器本身和两份 .bak 原始场景是进版本库的，字节码不是。
+__pycache__/
+
+# 引擎自己造出来的东西（2026-10-06 定的规矩：换台机器能重新产出的都不进代码库）。
+# *.uid    脚本和资源的编号，扫一遍文件结构就有；
+# *.import 图片等资源的导入配方，import 一次就有；
+# *.translation 从 csv 转出来的语言表，csv 是文本所以引擎能重转。
+# 这三族进库以后每次被引擎重造都会变成一次无意义的提交。
+*.uid
+*.import
+*.translation
+
+# 例外：那四份是**手写的**导入方式（importer="keep"），引擎自己造不出来 ——
+# 它只会写默认的 importer="texture"。少了它们，运行期读不到
+# res://src/tray/*.png 和 res://locale/keeper.csv（实测结果在 docs/packaging.md 第 4 步）。
+!src/tray/*.png.import
+!locale/keeper.csv.import
+
+# 构建产物与调试临时文件（2026-11-08 加）：换台机器能重新产出，禁止进版本库。
+# 产品的构建产物在 .godot/ 里，量具那个工程有自己的局部 .gitignore；这两行管仓库根。
+/bin/
+/obj/
+# 调试、自检、导出产出的临时文件一律不进版本库。正常落点是 .tmp/（Tmp.Root）
+# 和 .scratch/debug-tool/shots（量具帧），上面已经忽略；这里兜的是命令行漏给目录、
+# 手滑落在仓库根的那一份。根目录不放配图，配图按规矩放到用到它的那份文档旁边的 images/ 下。
+*.log
+*.tmp
+# *.tmp 也匹配 .tmp/ 这个目录名；把它放回来，里面的内容照上面那几行管。
+!.tmp/
+/*.png
+
+# 2026-11-08 所有者定夺：docs/research/images 不允许存在。
+# 取证帧移到 .tmp/research-images/，不随仓库走；这一条挡住它被再建回来。
+docs/research/images/

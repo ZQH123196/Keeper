@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    独立测量程序。纯 C#，不开引擎，也不依赖产品进程在跑。
+    主工程用 Godot.NET.Sdk，那一族默认把仓库底下所有 .cs 都 glob 进来，
+    所以 Keeper.csproj 里有一条 <Compile Remove="src/tools/**/*.cs" /> 把这里排除掉。
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- net8.0-windows + UseWPF 是为了 UI Automation（工单 07 的图标位置读法）。
+         它要的那一份在 Microsoft.WindowsDesktop.App 这个共用框架里 —— 系统自带，
+         不是 NuGet 包。代价：exe 起来要机器上装着桌面运行时（这台机器有）。
+         改这一行之前先看 docs/research/desktop-layer-and-window-measurements.md
+         「图标位置读法选型」那一节。 -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>DebugProbe</RootNamespace>
+    <AssemblyName>DebugProbe</AssemblyName>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <!--
+    「屏幕上那一点归谁」那一份判据两个工程共用：产品工程和这个测量程序互不引用，
+    所以同一个文件被两边各编一次（2026-10-14）。
+    主工程用 Godot.NET.Sdk，那一族默认把仓库底下所有 .cs 都 glob 进来，
+    src/Shared/WindowTier.cs 它自己就收进去了，所以那边不用改 csproj。
+    这一族默认只收本目录底下，所以这边要显式加一条。
+    那份文件不带 namespace：产品那侧的代码在 namespace Keeper 里、这边在 namespace DebugProbe 里，
+    带了 namespace 两边看到的就是两个同名不同形的类型。
+  -->
+  <ItemGroup>
+    <Compile Include="..\..\Shared\WindowTier.cs" />
+  </ItemGroup>
+
+</Project>

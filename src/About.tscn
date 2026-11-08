@@ -1,0 +1,110 @@
+; 关于窗口：360x260。
+;
+; 六行托盘菜单里它是最后建的那一扇 —— 之前 App.cs 给了五个回调，AboutClicked 一直空着，
+; 于是 Tray.cs 里那一行灰着。这一份场景把它补上。
+;
+; 和 Options.tscn 同一套白底规矩：一个铺满窗口的 ColorRect 加一份 Theme，字色<b>一个类型一个
+; 类型地给</b>（Godot 4 的 Theme 没有「全局默认字色」这一项，写 default_font_color 不报错也不
+; 生效 —— 第一版设置窗就是这么把整窗文字写成隐形的）。要特别的颜色只有一行：tagline 那一句是
+; 绿的，所以它自己带一份 font_color。
+;
+; 那颗圆点没有图：要的就是一块径向渐变的样子 —— 内圈 0~34% 亮绿、外圈 35~100% 深绿，用两块圆角
+; Panel 叠出来 —— 深的那块 54、亮的那块 18，18/54 正好落在 34% 那一档上。带一张 PNG 进
+; pck 换不来更多东西。
+;
+; 根节点那一条 visible = false 和 Options.tscn 同一条理由：一扇窗按 visible = true 进树，引擎
+; 当场就按它自己给的位置建一扇窗，而位置要等 _Ready 把字都填完才算得出来 —— 那一段时间里屏幕
+; 上是「一扇建好、什么都没画过」的黑窗。这一扇搭的东西少到看不见那一闪，但同一类隐患不留两份。
+;
+; Body 那一行的 autowrap_mode 是 1，也就是 Godot 4 的 WORD（不是 ARBITRARY —— 3 才是）。
+; 2026-10-01 核正：这一行原来把 1 和 3 的名字写反了，照着它去改会改错方向。
+; 留 1 的理由是当年量到的那条：中文没有空格，按词折行的最小宽度等于整句，
+; 会把窗口撑到比它还宽 —— 设置窗那一发就是这么栽过一次的
+; （CODING_STANDARDS.md 的代码级规矩里 autowrap 那一条）。
+; 顺带记着：设置窗那 48 颗提示标签后来改成了 2（WORD_SMART）—— 1 会把英文单词劈成两半，
+; 而 2 在中英文底下都对（实测结果在 docs/research/godot-4-7-2-ui-appearance-measurements.md 第四节）。
+; 这一扇没量过英文那一面，所以这里仍是 1。
+
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/About.cs" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="Box_mark"]
+corner_radius_top_left = 27
+corner_radius_top_right = 27
+corner_radius_bottom_left = 27
+corner_radius_bottom_right = 27
+bg_color = Color(0, 0.502, 0.251, 1)
+
+[sub_resource type="StyleBoxFlat" id="Box_core"]
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_left = 9
+corner_radius_bottom_right = 9
+bg_color = Color(0.208, 0.878, 0.486, 1)
+
+[sub_resource type="Theme" id="Theme_light"]
+default_font_size = 13
+Label/colors/font_color = Color(0.11, 0.129, 0.122, 1)
+
+[node name="About" type="Window"]
+title = "关于 Keeper"
+size = Vector2i(360, 260)
+visible = false
+unresizable = true
+init_toplevel = false
+theme = SubResource("Theme_light")
+script = ExtResource("1")
+
+[node name="Page" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.957, 0.965, 0.961, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Stack" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(308, 0)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Mark" type="CenterContainer" parent="Center/Stack"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+
+[node name="Disc" type="Panel" parent="Center/Stack/Mark"]
+custom_minimum_size = Vector2(54, 54)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Box_mark")
+
+[node name="Core" type="Panel" parent="Center/Stack/Mark"]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Box_core")
+
+[node name="Title" type="Label" parent="Center/Stack"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 21
+horizontal_alignment = 1
+text = "Keeper"
+
+[node name="Tagline" type="Label" parent="Center/Stack"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.502, 0.251, 1)
+horizontal_alignment = 1
+
+[node name="Body" type="Label" parent="Center/Stack"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.271, 0.318, 0.29, 1)
+autowrap_mode = 1
+horizontal_alignment = 1
+
+[node name="Meta" type="Label" parent="Center/Stack"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.49, 0.541, 0.514, 1)
+theme_override_font_sizes/font_size = 11
+horizontal_alignment = 1
